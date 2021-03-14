@@ -232,7 +232,24 @@ const router = new Router({
                     path: '/chat/index',
                     name: 'chat',
                     component: resolve => require(['../components/chat/index.vue'], resolve)
-                }
+                },
+                //将个人中心注册到路由上
+                {
+                    path: '/user/index',
+                    name: 'user',
+                    component: resolve => require(['../components/user/index.vue'], resolve)
+                },
+                {
+                    path: '/user/changepic',
+                    name: 'user',
+                    component: resolve => require(['../components/user/changepic.vue'], resolve)
+                },
+                {
+                    path: '/user/index',
+                    name: 'user',
+                    component: resolve => require(['../components/user/index.vue'], resolve)
+                },
+
             ]
         }
     ],

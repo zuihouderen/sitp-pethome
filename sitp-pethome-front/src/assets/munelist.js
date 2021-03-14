@@ -425,6 +425,32 @@ const navlist = [{
                 }
             }
         ]
+    },
+    //添加个人主页
+    {
+        adminMenu: {
+            id: 9,
+            menuName: "个人中心",
+            menuType: "list",
+            pid: "0",
+            url: "#",
+            sort: 9,
+            deep: 1,
+            code: "9"
+        },
+        children: [{
+            adminMenu: {
+                id: 91,
+                menuName: "我的主页",
+                menuType: "page",
+                pid: "9",
+                url: "/user/index",
+                sort: 1,
+                deep: 2,
+                code: "91"
+            }
+        }
+        ]
     }
 ]
 export default {
