@@ -11,49 +11,32 @@
           label-width="100px"
           class="register-form"
         >
-          ，
           <h2 class="center">注册账号</h2>
-          <el-form-item label="账号：" prop="username">
+          <el-form-item label="姓名：" prop="username">
             <el-input type="text" size="mini" class="formlist" v-model="form.username"></el-input>
-            <el-tooltip
-              class="item"
-              effect="dark"
-              content="长度不应超过16个字符且不含空格由英文和数字组成"
-              placement="top"
-            >
-              <i class="el-icon-question icon"></i>
-            </el-tooltip>
-          </el-form-item>
-          <el-form-item label="密码：" prop="pass">
-            <el-input type="password" v-model="form.pass" size="mini" class="formlist"></el-input>
-          </el-form-item>
-          <el-form-item label="确认密码：" prop="checkPass">
-            <el-input type="password" v-model="form.checkPass" size="mini" class="formlist"></el-input>
-          </el-form-item>
-          <el-form-item label="昵称：" prop="nickname">
-            <el-input type="text" size="mini" class="formlist" v-model="form.nickname"></el-input>
             <el-tooltip class="item" effect="dark" content="长度不应超过7个字符且不含空格" placement="top">
               <i class="el-icon-question icon"></i>
             </el-tooltip>
           </el-form-item>
-          <el-form-item label="姓名：" prop="name">
-            <el-input type="text" size="mini" class="formlist" v-model="form.name"></el-input>
+          <el-form-item label="密码：" prop="password">
+            <el-input type="password" v-model="form.password" size="mini" class="formlist"></el-input>
           </el-form-item>
-          <el-form-item label="性别：" prop="sex">
-            <el-select size="mini" class="formlist" v-model="form.sex">
-              <el-option value="男" label="男"></el-option>
-              <el-option value="女" label="女"></el-option>
+          <el-form-item label="确认密码：" prop="checkPass">
+            <el-input type="password" v-model="form.checkPass" size="mini" class="formlist"></el-input>
+          </el-form-item>
+          <el-form-item label="地址：" prop="address">
+            <el-input type="text" v-model="form.address" size="mini" class="formlist"></el-input>
+          </el-form-item>
+          <el-form-item label="性别：" prop="user_gender">
+            <el-select size="mini" class="formlist" v-model="form.user_gender">
+              <el-option value="1" label="男"></el-option>
+              <el-option value="0" label="女"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="生日：" prop="birthday">
-            <el-date-picker
-              v-model="form.birthday"
-              type="date"
-              placeholder="选择日期"
-              size="mini"
-              class="formlist"
-            ></el-date-picker>
+          <el-form-item label="年龄：" prop="user_age">
+            <el-input type="text" v-model="form.user_age" size="mini" class="formlist"></el-input>
           </el-form-item>
+
           <el-form-item prop="code" label="验证码:">
             <el-input
               type="text"
@@ -107,10 +90,19 @@ export default {
     var validatePass2 = (rule, value, callback) => {
       if (value === "") {
         callback(new Error("请再次输入密码"));
-      } else if (value !== this.form.pass) {
+      } else if (value !== this.form.password) {
         callback(new Error("两次输入密码不一致!"));
       } else {
         callback();
+      }
+    };
+    let validateAmount = (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error("年龄不能为空"));
+      }  else if (value > 99 || value <= 0) {
+        return callback(new Error(`请输入0-99范围的值`));
+      } else {
+        return callback();
       }
     };
     var checkCode = (rule, value, callback) => {
@@ -120,29 +112,19 @@ export default {
         callback();
       }
     };
-    var checkBirthday = (rule, value, callback) => {
-      if (
-        this.moment(value).valueOf() >
-        this.moment()
-          .startOf("day")
-          .valueOf()
-      ) {
-        return callback(new Error("生日必须大于当天"));
-      }
-      callback();
-    };
     return {
       imageUrl: "",
       code: "",
       showCode: "",
       form: {
         username: "",
-        pass: "",
+        password: "",
         checkPass: "",
-        nickname: "",
-        name: "",
-        birthday: "",
-        sex: "女",
+        address:'',
+        img:"https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png",
+        admin:'0',
+        user_gender: "1",
+        user_age:'',
         code: "",
         regday: this.moment(new Date()).format("YYYY-MM-DD")
       },
@@ -150,7 +132,7 @@ export default {
         height: ""
       },
       rules: {
-        pass: [
+        password: [
           { min: 6, max: 20, message: "长度在6到20个字符", trigger: "blur" },
           { validator: validatePass, trigger: "blur" }
         ],
@@ -158,25 +140,20 @@ export default {
           { min: 6, max: 20, message: "长度在6到20个字符", trigger: "blur" },
           { validator: validatePass2, trigger: "blur" }
         ],
-        nickname: [
-          { validator: checkinput, message: "昵称不能为空" },
-          { min: 1, max: 7, message: "长度在1到7个字符" }
-        ],
-        name: [
-          { validator: checkname, types: "名字" },
-          { min: 1, max: 10, message: "长度在1到10个字符" }
-        ],
         username: [
           { validator: checkinput, message: "账号不能为空" },
           { validator: checkspace, message: "账号不能包含空格" },
-          { validator: checkzh, message: "账号不能包含中文" },
-          { validator: checkspecil, message: "账号不能包含特殊字符" },
           { min: 1, max: 16, message: "长度在1到16个字符" }
         ],
-        birthday: [
-          { validator: checkinput, message: "生日不能为空" },
-          { validator: checkBirthday, message: "生日必须大于当天" }
+        address: [
+          { validator: checkinput, message: "地址不能为空" },
+          { validator: checkspace, message: "地址不能包含空格" },
+          { min: 1, max: 16, message: "长度在1到16个字符" }
         ],
+        user_age: [
+          {validator:validateAmount}
+        ],
+
         code: [
           { validator: checkinput, message: "验证码不能为空" },
           { validator: checkCode, trigger: "blur" }
@@ -192,11 +169,9 @@ export default {
     goRegister() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          this.form.birthday = this.moment(this.form.birthday).format(
-            "YYYY-MM-DD"
-          );
-          this.axios.post("/api/user/register", { ...this.form }).then(res => {
-            if (res.data.success) {
+          this.axios.post("http://127.0.0.1:5000/user/register", { ...this.form }).then(res => {
+            console.log(res.data);
+            if (res.data.code===20000) {
               this.$message.success("注册成功！正在跳转登录页面······");
               setTimeout(() => {
                 this.$router.push("/login");

@@ -241,13 +241,13 @@ const router = new Router({
                 },
                 {
                     path: '/user/changepic',
-                    name: 'user',
+                    name: 'changepic',
                     component: resolve => require(['../components/user/changepic.vue'], resolve)
                 },
                 {
-                    path: '/user/index',
-                    name: 'user',
-                    component: resolve => require(['../components/user/index.vue'], resolve)
+                    path: '/user/pet/:id',
+                    name: 'petdetail',
+                    component: resolve => require(['../components/user/petdetail.vue'], resolve)
                 },
 
             ]
@@ -255,17 +255,17 @@ const router = new Router({
     ],
 })
 
-// router.beforeEach((to, from, next) => {
-//     if (to.path === '/login' || to.path === '/forgetpsd' || to.path === '/register') {
-//         next();
-//     } else {
-//         let token = localStorage.getItem('token');
-//         if (token === null || token === '') {
-//             next('/login');
-//         } else {
-//             next();
-//         }
-//     }
-// });
+router.beforeEach((to, from, next) => {
+    if (to.path === '/login' || to.path === '/forgetpsd' || to.path === '/register') {
+        next();
+    } else {
+        let token = localStorage.getItem('token');
+        if (token === null || token === '') {
+            next('/login');
+        } else {
+            next();
+        }
+    }
+});
 
 export default router

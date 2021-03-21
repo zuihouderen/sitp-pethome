@@ -11,9 +11,9 @@
           ref="loginform"
         >
           <h2 class="center">登录</h2>
-          <el-form-item prop="username" label="账号:">
+          <el-form-item prop="user_name" label="账号:">
             <el-row>
-              <el-input type="text" size="small" v-model="loginform.username" class="input"></el-input>
+              <el-input type="text" size="small" v-model="loginform.user_name" class="input"></el-input>
             </el-row>
           </el-form-item>
           <el-form-item prop="password" label="密码:">
@@ -56,7 +56,7 @@ export default {
       code: "",
       showCode: "",
       loginform: {
-        username: "",
+        user_name: "",
         password: "",
         code: ""
       },
@@ -64,7 +64,7 @@ export default {
         height: ""
       },
       rules: {
-        username: [
+        user_name: [
           { validator: checkinput, message: "账号不能为空" },
           { min: 1, max: 16, message: "长度在1到16个字符" }
         ],
@@ -94,22 +94,21 @@ export default {
             this.$message.warning("验证码错误！");
           } else {
             this.axios
-              .post("/api/login", {
-                username: _this.loginform.username,
+              .post("http://127.0.0.1:5000/user/login", {
+                user_name: _this.loginform.user_name,
                 password: _this.loginform.password
               })
               .then(res => {
-                if (res.data.success) {
-                  _this.setToken({ token: res.data.token }); //store中的为token赋值方法
+                console.log(res.data);
+                if (res.data.flag) {
+                  console.log(res.data.data);
+                  _this.setToken({ token: res.data.data.token }); //store中的为token赋值方法
                   _this.axios
-                    .get("/api/user/get", {
-                      params: {
-                        id: _this.loginform.username
-                      }
-                    })
+                    .get("http://127.0.0.1:5000/user/get_myinfo" )
                     .then(res => {
-                      if (res.data.success) {
-                        _this.setUser({ user: res.data.message });
+                      if (res.data.flag) {
+                        console.log(res.data);
+                        _this.setUser({ user: res.data.rows });
                         _this.$router.push("/");
                       }
                     });

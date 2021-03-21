@@ -4,11 +4,10 @@
             <span class="font-25">账号信息</span>
             <div class="person-boder">
                 <el-row :gutter="20">
-                    <el-col :span="9">
+                    <el-col :span=9>
                         <div class="picture-box">
+                            <el-avatar class="picture" :src="form.user_img" @error="errorHandler">
 
-                            <el-avatar class="picture" :src="form.picture" @error="errorHandler">
-                                <img src='https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg' />
                             </el-avatar>
                             <div class="center">
                                 <el-button class="look-botton" circle @click="isShowImageDialog=true">
@@ -22,48 +21,64 @@
                             </div>
                             </div>
                     </el-col>
-                    <el-col :span="15"><el-form label-position="right" :model="form" :rules="rules" ref="form" class="form">
-                        <el-form-item label="用户名：" class="form-item-padding">
-                            <span style="color: #898989;">{{form.username}}</span>
-                        </el-form-item>
-                        <el-form-item
-                                label="昵称："
-                                class="form-item-padding"
-                                prop="nickname"
-                                :inline-message="true"
-                        >
-                            <el-input type="text" size="small" class="formlist" v-model="form.nickname"></el-input>
-                        </el-form-item>
-                        <el-form-item label="姓名：" class="form-item-padding" prop="name" :inline-message="true">
-                            <el-input type="text" size="small" class="formlist" v-model="form.name"></el-input>
-                        </el-form-item>
-                        <el-form-item label="性别：" class="form-item-padding" prop="sex">
-                            <el-select size="small" class="formlist" v-model="form.sex">
-                                <el-option value="男" label="男"></el-option>
-                                <el-option value="女" label="女"></el-option>
-                            </el-select>
-                        </el-form-item>
-                        <el-form-item
-                                label="生日："
-                                class="form-item-padding"
-                                prop="birthday"
-                                :inline-message="true"
-                        >
-                            <el-date-picker type="date" size="small" class="formlist" v-model="form.birthday"></el-date-picker>
-                            <el-tooltip class="item" effect="dark" content="亲，生日当月将有小惊喜哦（每年只享受一次）" placement="top">
-                                <i class="el-icon-question icon"></i>
-                            </el-tooltip>
-                        </el-form-item>
-                        <el-form-item label="注册日期：" class="form-item-padding">
-                            <span style="color: #898989;">{{form.regday}}</span>
-                        </el-form-item>
-                        <div class="center">
-                            <el-button type="primary" size="small" @click="goSave">保存</el-button>
-                            <el-button size="small" @click="goClear">取消</el-button>
-                        </div>
-                    </el-form></el-col>
+                    <el-col :span=15>
+                        <el-form label-position="right" :model="form" :rules="rules" ref="form" class="form">
+                            <el-form-item label="姓名：" class="form-item-padding" prop="user_name" :inline-message="true">
+                                <el-input type="text" size="small" class="formlist" v-model="form.user_name"></el-input>
+                            </el-form-item>
+                            <el-form-item label="性别：" class="form-item-padding" prop="user_gender">
+                                <el-select size="small" class="formlist" v-model="form.user_gender">
+                                    <el-option value="1" label="男"></el-option>
+                                    <el-option value="0" label="女"></el-option>
+                                </el-select>
+                            </el-form-item>
+                            <el-form-item label="地址：" class="form-item-padding" prop="address" :inline-message="true">
+                                <el-input type="text" size="small" class="formlist" v-model="form.address"></el-input>
+                            </el-form-item>
+                            <el-form-item label="年龄：" class="form-item-padding" prop="user_age" :inline-message="true">
+                                <el-input type="text" size="small" class="formlist" v-model="form.user_age"></el-input>
+                            </el-form-item>
+                            <div class="center">
+                                <el-button type="primary" size="small" @click="goSave">保存</el-button>
+                                <el-button size="small" @click="goClear">取消</el-button>
+                            </div>
+                        </el-form>
+                    </el-col>
                 </el-row>
             </div>
+        </div>
+        <div>
+            <el-row gutter="20px">
+                <el-col :span="12">
+                    <span class="font-25">我的关注</span>
+                    <div class="person-boder">
+                        <el-carousel :interval="1000" type="card" height="200px" indicator-position="none">
+                            <el-carousel-item v-for="item in 10" :key="item" style="border-radius: 5px">
+                                <el-image
+                                        style="width: 100%;display: block"
+                                        src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"
+                                        @click="goDetail(item)">
+                                </el-image>
+                            </el-carousel-item>
+                        </el-carousel>
+                    </div>
+                </el-col>
+                <el-col :span="12">
+                    <span class="font-25">我的宠物</span>
+                    <div class="person-boder">
+                        <el-carousel :interval="1000" type="card" height="200px" indicator-position="none">
+                            <el-carousel-item v-for="item in 10" :key="item" style="border-radius: 5px">
+                                <el-image
+                                        style="width: 100%;display: block"
+                                        src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"
+                                        @click="goDetail(item)">
+                                </el-image>
+                            </el-carousel-item>
+                        </el-carousel>
+                    </div>
+                </el-col>
+            </el-row>
+
         </div>
         <div style="margin-top:20px;">
             <span class="font-25">账号安全</span>
@@ -83,7 +98,7 @@
         </div>
         <el-dialog :visible.sync="isShowImageDialog">
             <img
-                    :src="form.picture"
+                    :src="form.user_img"
                     style="max-width: 100%;max-height: 100%;display: block; margin: 0 auto;"
             />
         </el-dialog>
@@ -99,48 +114,51 @@
     } from "@assets/validate.js";
     import Dialog from "@common/dialog.vue";
     import psd from "./psd.vue";
+    import store from "../../store/main";
     export default {
         components: {
             Dialog
         },
         name: "user",
         data() {
-            var checkBirthday = (rule, value, callback) => {
-                if (
-                    this.moment(value).valueOf() >
-                    this.moment()
-                        .startOf("day")
-                        .valueOf()
-                ) {
-                    return callback(new Error("生日必须大于当天"));
+            let validateAmount = (rule, value, callback) => {
+                if (!value) {
+                    return callback(new Error("年龄不能为空"));
+                }  else if (value > 99 || value <= 0) {
+                    return callback(new Error(`请输入0-99范围的值`));
+                } else {
+                    return callback();
                 }
-                callback();
             };
             return {
                 isShowImageDialog: false,
                 imageUrl: "",
-                form: {},
+                form: {
+                    user_name:'',
+                    user_img:"",
+                    user_gender: "",
+                    address: "",
+                    user_age:"",
+                },
                 old: {
-                    nickname: "",
-                    name: "",
-                    sex: "",
-                    birthday: "",
+                    user_name: "",
+                    user_gender: "",
+                    address: "",
+                    user_age:"",
                 },
                 rules: {
-                    nickname: [
-                        { validator: checkinput, message: "昵称不能为空" },
-                        { min: 1, max: 7, message: "长度在1到7个字符" }
-                    ],
-                    name: [
+                    user_name: [
                         { validator: checkinput, message: "姓名不能为空" },
                         { validator: checkspecil, message: "姓名不能包含特殊字符" },
                         { validator: checknum, message: "姓名不能包含数字" },
                         { validator: checkspace, message: "姓名不能包含空格" },
                         { min: 1, max: 10, message: "长度在1到10个字符" }
                     ],
-                    birthday: [
-                        { validator: checkinput, message: "生日不能为空" },
-                        { validator: checkBirthday, message: "生日必须大于当天" }
+                   address: [
+                       { validator: checkinput, message: "地址不能为空" },
+                    ],
+                    user_age: [
+                        { validator: validateAmount },
                     ]
                 }
             };
@@ -151,24 +169,18 @@
         methods: {
             getPerson() {
                 this.axios
-                    .get("/api/user/get", {
-                        /*请求参数*/
-                        params: {
-                            id: this.$store.state.username
-                        }
-                    })
+                    .get("http://127.0.0.1:5000/user/get_myinfo")
                     .then(res => {
-                        if (res.data.success) {
-                            var results = res.data.message;
+                        console.log(res.data)
+                        if (res.data.flag) {
+                            console.log(res.data.data.rows);
+                            var results = res.data.data.rows;
                             /**表单初始值*/
                             this.form = results;
-                            this.old.nickname = results.nickname;
-                            this.old.name = results.name;
-                            this.old.sex = results.sex;
-                            this.old.birthday = results.birthday;
-                            this.form.regday = this.moment(this.form.regday).format(
-                                "YYYY-MM-DD"
-                            );
+                            this.old.user_name = results.user_name;
+                            this.old.user_gender = results.user_gender;
+                            this.old.address=results.address;
+                            this.old.user_age=results.user_age;
                         }
                     });
             },
@@ -179,10 +191,9 @@
                             confirmButtonText: "确定",
                             cancelButtonText: "取消"
                         }).then(() => {
-                            var time = this.moment(this.form.birthday).format("YYYY-MM-DD");
                             this.axios
                                 .post("/api/user/update", {
-                                    nickname: this.form.nickname,
+                                    user_name: this.form.user_name,
                                     name: this.form.name,
                                     sex: this.form.sex,
                                     birthday: time,
@@ -201,10 +212,11 @@
                 });
             },
             goClear() {
-                this.form.nickname = this.old.nickname;
-                this.form.name = this.old.name;
-                this.form.sex = this.old.sex;
-                this.form.birthday = this.old.birthday;
+                console.log("数据清空");
+                this.form.user_name = this.old.user_name;
+                this.form.user_gender = this.old.user_gender;
+                this.form.address = this.old.address;
+                this.form.user_age = this.old.user_age;
             },
             goPsd() {
                 this.Dialog.title("修改密码")
@@ -220,6 +232,11 @@
             },
             goUrl(url) {
                 this.$router.push(url);
+            },
+            /**进入宠物详情*/
+            goDetail(id){
+                this.$router.push(`./pet/${id}`);
+                console.log("详情")
             }
         }
     };
@@ -236,7 +253,7 @@
     .person-boder {
         background: #ffffff;
         border: 1px solid #dddddd;
-        padding: 10px 0;
+        padding: 10px 10px;
         margin: 20px 0;
         min-width: 420px;
     }
@@ -284,8 +301,8 @@
         padding: 10px 0;
     }
     .picture-box {
-        width: 200px;
-        height: 200px;
+        width: 150px;
+        height: 150px;
        /* border: 1px solid #e5e9ef;*/
        /* border-radius: 50%;*/
         padding: 40px;
@@ -293,20 +310,20 @@
         position: relative;
     }
     .picture {
-        width: 200px;
-        height: 200px;
+        width: 150px;
+        height: 150px;
         /*border-radius: 50%;*/
     }
     .change-button {
         position: absolute;
-        top: 250px;
+        top: 150px;
         right: 0px;
         color: #ffffff;
         background-color: #00a1d6;
     }
     .look-botton {
         position: absolute;
-        top: 250px;
+        top: 150px;
         left: 0px;
         color: #00a1d6;
         border: 1px solid #00a1d6;
@@ -315,5 +332,20 @@
     .form {
         width: 350px;
         margin: 0 auto;
+    }
+    .el-carousel__item el-image {
+        color: #36694d;
+        font-size: 14px;
+        opacity: 0.75;
+        line-height: 120px;
+        margin: 0;
+    }
+
+    .el-carousel__item:nth-child(2n) {
+        background-color: #99a9bf;
+    }
+
+    .el-carousel__item:nth-child(2n+1) {
+        background-color: #d3dce6;
     }
 </style>

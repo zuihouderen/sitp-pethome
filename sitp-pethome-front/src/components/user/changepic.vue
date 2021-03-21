@@ -41,6 +41,8 @@
 
 <script>
 import { mapMutations } from "vuex";
+import Util from "../../assets/Util";
+import store from "../../store/main";
 export default {
   name: "changePic",
   data() {
@@ -58,21 +60,18 @@ export default {
     ...mapMutations(["setPicture"]),
     getPicture() {
       this.axios
-        .get("/api/user/get", {
-          params: {
-            id: this.$store.state.username
-          }
-        })
+        .get("http://127.0.0.1:5000/user/get_myinfo")
         .then(res => {
-          if (res.data.success) {
-            var results = res.data.message;
-            this.showImageurl = results.picture;
-            this.old = results.picture;
+          if (res.data.flag) {
+            var results = res.data.data.rows;
+            this.showImageurl = results.user_img;
+            this.old = results.user_img;
           }
         });
     },
     goUpdate() {
       if (this.imageUrl) {
+        console.log( store.state.user_age);
         const loading = this.$loading({
           lock: true,
           text: "头像更新中...",
@@ -81,14 +80,18 @@ export default {
         });
         setTimeout(() => {
           this.axios
-            .put("/api/user/update/picture", {
-              picture: this.showImageurl,
-              username: this.$store.state.username
+            .post("http://127.0.0.1:5000/user/modify_user", {
+              img: this.showImageurl,
+              name: this.$store.state.user_name,
+              address:this.$store.state.address,
+              age:this.$store.state.user_age,
+              gender:this.$store.state.user_gender
             })
             .then(res => {
-              if (res.data.success) {
+              console.log(res.data);
+              if (res.data.flag) {
                 this.$message.success("修改头像成功！");
-                this.setPicture(this.showImageurl);
+                this.setPicture({user_img : this.showImageurl});
                 this.imageUrl = "";
                 this.getPicture();
                 loading.close();
@@ -100,14 +103,8 @@ export default {
       }
     },
     upload(file) {
-      let OSS = require("ali-oss");
-      const client = new OSS({
-        region: "oss-cn-hangzhou",
-        accessKeyId: "LTAIMYW16QYY4WTH",
-        accessKeySecret: "5I2HVy0oFPyeg3BHO1fUhzHGZvjvKp",
-        bucket: "mmzdpicture"
-      });
-      var fileName = "mmzdtx" + file.file.uid;
+      var client= Util.createAliOss();
+      var fileName = "sitp" + file.file.uid;
       client
         .put(fileName, file.file)
         .then(result => {
@@ -119,17 +116,7 @@ export default {
         });
     },
     beforeAvatarUpload(file) {
-      const isJPG = file.type === "image/jpeg";
-      const isLt2M = file.size / 1024 / 1024 < 2;
-      const isPNG = file.type === "image/png";
-      if (!isJPG && !isPNG) {
-        this.$message.error("上传头像图片只能是 JPG和PNG 格式!");
-        return false;
-      }
-      if (!isLt2M) {
-        this.$message.error("上传头像图片大小不能超过 2MB!");
-        return false;
-      }
+     return Util.beforeAvatarUpload(file);
     },
     goClear() {
       this.showImageurl = this.old;

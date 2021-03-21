@@ -145,6 +145,31 @@ const Util = {
         }
         return weatherStr;
     },
+    //创建ali-oss对象
+    createAliOss(){
+        let OSS = require("ali-oss");
+        return new OSS({
+            region: "oss-cn-shanghai",
+            accessKeyId: "LTAI5tGNoFNnRxaFCXMWxPUC",
+            accessKeySecret: "8ohCHJydezjbYY0BPT8vEJqrFhcUDE",
+            bucket: "sitp"
+        });
+    },
+    //上传图像校验
+    beforeAvatarUpload(file) {
+        const isJPG = file.type === "image/jpeg";
+        const isLt2M = file.size / 1024 / 1024 < 2;
+        const isPNG = file.type === "image/png";
+        if (!isJPG && !isPNG) {
+            this.$message.error("上传头像图片只能是 JPG和PNG 格式!");
+            return false;
+        }
+        if (!isLt2M) {
+            this.$message.error("上传头像图片大小不能超过 2MB!");
+            return false;
+        }
+    },
+
 }
 
 
