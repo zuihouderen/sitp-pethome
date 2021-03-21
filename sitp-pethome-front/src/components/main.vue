@@ -284,6 +284,25 @@ export default {
     getWeatherIcon(i) {
       return Util.getWeatherIcon(i);
     },
+    getPetList(){
+        this.axios("/api/pets/list").then(res => {
+            if(res.data.success){
+
+            }
+        });
+    },
+    getPet(id){
+        this.axios("/api/pets/", {
+            params: {
+                id: id
+            }
+        }).then(res =>{
+            if(res.data.success){
+                
+            }
+        })
+
+    },
     dealMyDate(v) {
       let len = this.calendarDate.length;
       let res = "";
