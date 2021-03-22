@@ -52,7 +52,7 @@
                 <el-col :span="12">
                     <span class="font-25">我的关注</span>
                     <div class="person-boder">
-                        <el-carousel :interval="1000" type="card" height="200px" indicator-position="none">
+                        <el-carousel :interval="1500" type="card" height="200px" indicator-position="none">
                             <el-carousel-item v-for="item in 10" :key="item" style="border-radius: 5px">
                                 <el-image
                                         style="width: 100%;display: block"
@@ -64,9 +64,9 @@
                     </div>
                 </el-col>
                 <el-col :span="12">
-                    <span class="font-25">我的宠物</span>
+                    <span class="font-25" @click="goAdd">我的宠物</span>
                     <div class="person-boder">
-                        <el-carousel :interval="1000" type="card" height="200px" indicator-position="none">
+                        <el-carousel :interval="1500" type="card" height="200px" indicator-position="none">
                             <el-carousel-item v-for="item in 10" :key="item" style="border-radius: 5px">
                                 <el-image
                                         style="width: 100%;display: block"
@@ -114,7 +114,7 @@
     } from "@assets/validate.js";
     import Dialog from "@common/dialog.vue";
     import psd from "./psd.vue";
-    import store from "../../store/main";
+    import petadd_update from "./dialog/petadd_update";
     export default {
         components: {
             Dialog
@@ -192,15 +192,15 @@
                             cancelButtonText: "取消"
                         }).then(() => {
                             this.axios
-                                .post("/api/user/update", {
-                                    user_name: this.form.user_name,
-                                    name: this.form.name,
-                                    sex: this.form.sex,
-                                    birthday: time,
-                                    username: this.form.username
+                                .post("http://127.0.0.1:5000/user/modify_user", {
+                                    name: this.form.user_name,
+                                    age: this.form.user_age,
+                                    gender: this.form.user_gender,
+                                    address: this.form.address,
+                                    img:this.form.user_img,
                                 })
                                 .then(res => {
-                                    if (res.data.success) {
+                                    if (res.data.flag) {
                                         this.getPerson();
                                         this.$message.success("修改信息成功！");
                                     }
@@ -237,6 +237,19 @@
             goDetail(id){
                 this.$router.push(`./pet/${id}`);
                 console.log("详情")
+            },
+            /**
+             * 添加我的宠物
+             */
+            goAdd(){
+                console.log("添加宠物");
+                this.Dialog.title("添加宠物")
+                    .width("600px")
+                    .currentView(petadd_update, {})
+                    .then(data => {
+                        this.getPerson();
+                    })
+                    .show();
             }
         }
     };

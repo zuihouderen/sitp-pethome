@@ -21,20 +21,20 @@ const store = new Vuex.Store({
             localStorage.setItem("token", token.token);
         },
         setUser(state, user) {
-            state.user_name = user.user_name;
-            state.user_id = user.user_id;
-            state.user_img = user.user_img;
-            state.admin = user.admin;
-            state.address = user.address;
-            state.user_gender = user.user_gender;
-            state.user_age = user.user_age;
-            localStorage.setItem("user_name", user.user_name);
-            localStorage.setItem("user_id", user.user_id);
-            localStorage.setItem("user_img", user.user_img);
-            localStorage.setItem("admin", user.admin);
-            localStorage.setItem("address", user.address);
-            localStorage.setItem("user_gender", user.user_gender);
-            localStorage.setItem("user_age", user.user_age);
+            state.user_name = user.user.user_name;
+            state.user_id = user.user.user_id;
+            state.user_img = user.user.user_img;
+            state.admin = user.user.admin;
+            state.address = user.user.address;
+            state.user_gender = user.user.user_gender;
+            state.user_age = user.user.user_age;
+            localStorage.setItem("user_name", user.user.user_name);
+            localStorage.setItem("user_id", user.user.user_id);
+            localStorage.setItem("user_img", user.user.user_img);
+            localStorage.setItem("admin", user.user.admin);
+            localStorage.setItem("address", user.user.address);
+            localStorage.setItem("user_gender", user.user.user_gender);
+            localStorage.setItem("user_age", user.user.user_age);
         },
         setPicture(state, user_img) {
             state.user_img = user_img;
@@ -52,6 +52,16 @@ const store = new Vuex.Store({
             localStorage.clear();
         }
     },
+    getters:{
+      getUser:function (state) {
+          return state;
+      },
+      getToken:function (state) {
+          return state.token;
+      }
+
+
+    }
 })
 
 export default store;

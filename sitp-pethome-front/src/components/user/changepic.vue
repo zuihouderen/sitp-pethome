@@ -82,10 +82,10 @@ export default {
           this.axios
             .post("http://127.0.0.1:5000/user/modify_user", {
               img: this.showImageurl,
-              name: this.$store.state.user_name,
-              address:this.$store.state.address,
-              age:this.$store.state.user_age,
-              gender:this.$store.state.user_gender
+              name: this.$store.getters.getUser.user_name,
+              address:this.$store.getters.getUser.address,
+              age:this.$store.getters.getUser.user_age,
+              gender:this.$store.getters.getUser.user_gender
             })
             .then(res => {
               console.log(res.data);
@@ -97,7 +97,7 @@ export default {
                 loading.close();
               }
             });
-        }, 4000);
+        }, 2000);
       } else {
         this.$message.warning("请选择头像！");
       }

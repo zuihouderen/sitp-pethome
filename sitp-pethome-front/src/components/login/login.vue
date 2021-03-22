@@ -107,8 +107,8 @@ export default {
                     .get("http://127.0.0.1:5000/user/get_myinfo" )
                     .then(res => {
                       if (res.data.flag) {
-                        console.log(res.data);
-                        _this.setUser({ user: res.data.rows });
+                        _this.setUser({ user:res.data.data.rows });
+                        console.log(this.$store.getters.getUser);
                         _this.$router.push("/");
                       }
                     });
