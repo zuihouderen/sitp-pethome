@@ -1,11 +1,15 @@
 <template>
   <div>
     <div class="pet-button-box">
-      <div style="display:inline-block;">
-        <el-button type="primary" size="small" @click="goSeeOut">查看售出</el-button>
-        <el-button type="primary" size="small" @click="goSeeIn">查看在售</el-button>
+      <div style="display: inline-block">
+        <el-button type="primary" size="small" @click="goSeeOut"
+          >查看售出</el-button
+        >
+        <el-button type="primary" size="small" @click="goSeeIn"
+          >查看在售</el-button
+        >
       </div>
-      <div style="display:inline-block;">
+      <div style="display: inline-block">
         <input
           type="text"
           placeholder="¥"
@@ -14,7 +18,7 @@
           class="el-input__inner inputwidth"
           oninput="value=value.replace(/[^\d]/g,'');if(value.length>10)value=value.slice(0,10)"
         />
-        <span style="margin-left:5px;margin-right:5px;">-</span>
+        <span style="margin-left: 5px; margin-right: 5px">-</span>
         <input
           type="text"
           placeholder="¥"
@@ -23,18 +27,27 @@
           class="el-input__inner inputwidth"
           oninput="value=value.replace(/[^\d]/g,'');if(value.length>10)value=value.slice(0,10)"
         />
-        <el-button type="primary" size="small" style="margin-left:10px;" @click="goSearch">搜索</el-button>
+        <el-button
+          type="primary"
+          size="small"
+          style="margin-left: 10px"
+          @click="goSearch"
+          >搜索</el-button
+        >
       </div>
     </div>
-    <div v-if="tableData.length!=0">
+    <div v-if="tableData.length != 0">
       <div
         class="pet-list-box"
         @click="goDetail(item)"
-        v-for="(item,index) in tableData"
+        v-for="(item, index) in tableData"
         :key="index"
       >
         <div v-if="!seeOut">
-          <i class="el-icon-shopping-cart-2 pet-shopcar" @click.stop="goAddShop(item)"></i>
+          <i
+            class="el-icon-shopping-cart-2 pet-shopcar"
+            @click.stop="goAddShop(item)"
+          ></i>
           <el-button
             v-if="item.collect"
             type="danger"
@@ -53,15 +66,15 @@
           ></el-button>
         </div>
         <el-image class="pet-picture" :src="item.picture" fit="fill"></el-image>
-        <span class="pet-title">{{item.name}}</span>
+        <span class="pet-title">{{ item.name }}</span>
         <div class="pet-info-box">
-          <span class="pet-info">{{item.variety}}</span>
-          <span class="pet-info">{{item.age}}</span>
+          <span class="pet-info">{{ item.variety }}</span>
+          <span class="pet-info">{{ item.age }}</span>
         </div>
         <div class="pet-info-box">
-          <span class="pet-info" v-if="item.status=='saled'">售出</span>
+          <span class="pet-info" v-if="item.status == 'saled'">售出</span>
           <span class="pet-info" v-else>在售</span>
-          <span class="pet-info">{{item.price}}</span>
+          <span class="pet-info">{{ item.price }}</span>
         </div>
       </div>
     </div>
@@ -75,7 +88,7 @@
       @size-change="sizeChangeHandle"
       @current-change="currentChangeHandle"
       :current-page="page_no"
-      :page-sizes="[10,20,40,50]"
+      :page-sizes="[10, 20, 40, 50]"
       :page-size="page_size"
       :total="total"
       layout="total, sizes, prev, pager, next, jumper"
@@ -91,7 +104,7 @@ import detail from "./detail.vue";
 import Util from "@assets/Util.js";
 export default {
   components: {
-    Dialog
+    Dialog,
   },
   name: "index",
   data() {
@@ -103,7 +116,7 @@ export default {
       page_size: 10,
       seeOut: false,
       tableData: [{}],
-      collectObs: []
+      collectObs: [],
     };
   },
   created() {
@@ -113,7 +126,7 @@ export default {
     makeQuery() {
       let query = {
         page_no: this.page_no,
-        page_size: this.page_size
+        page_size: this.page_size,
       };
       if (this.seeOut) {
         query.index = "status = 'saled'";
@@ -141,10 +154,10 @@ export default {
       this.axios
         .get("/api/pet/get", {
           params: {
-            ...query
-          }
+            ...query,
+          },
         })
-        .then(res => {
+        .then((res) => {
           if (res.data.success) {
             var results = res.data;
             this.tableData = results.message;
@@ -159,17 +172,17 @@ export default {
             }
             return this.axios.get("/api/collect/get", {
               params: {
-                username: this.$store.state.username
-              }
+                username: this.$store.state.username,
+              },
             });
           }
         })
-        .then(res => {
+        .then((res) => {
           if (res.data.success) {
             var results = res.data.message;
             this.collectObs = results
-              .filter(item => item.status == "saling")
-              .map(item => {
+              .filter((item) => item.status == "saling")
+              .map((item) => {
                 return item.petid;
               });
             this.tableData.filter((item, index) => {
@@ -185,9 +198,9 @@ export default {
       this.axios
         .post("/api/collect/add", {
           username: this.$store.state.username,
-          petid: row.petid
+          petid: row.petid,
         })
-        .then(res => {
+        .then((res) => {
           if (res.data.success) {
             row.collect = true;
             this.$message.success("加入收藏!");
@@ -199,10 +212,10 @@ export default {
         .delete("/api/collect/delete", {
           data: {
             username: this.$store.state.username,
-            petid: row.petid
-          }
+            petid: row.petid,
+          },
         })
-        .then(res => {
+        .then((res) => {
           if (res.data.success) {
             row.collect = false;
             this.$message.success("取消收藏!");
@@ -230,15 +243,15 @@ export default {
     goAddShop(row) {
       this.$confirm("确定加入购物车?", "提示", {
         confirmButtonText: "确定",
-        cancelButtonText: "取消"
+        cancelButtonText: "取消",
       })
         .then(() => {
           this.axios
             .post("/api/shopcar/add", {
               petid: row.petid,
-              username: this.$store.state.username
+              username: this.$store.state.username,
             })
-            .then(res => {
+            .then((res) => {
               if (res.data.success) {
                 if (res.data.message == "宠物已达上限") {
                   this.$message.warning("购物车中数量已达最大库存！");
@@ -254,7 +267,7 @@ export default {
       this.Dialog.title("宠物详情")
         .width("500px")
         .currentView(detail, { row })
-        .then(data => {
+        .then((data) => {
           this.goQuery();
         })
         .show();
@@ -266,8 +279,8 @@ export default {
     currentChangeHandle(val) {
       this.page_no = val;
       this.goQuery();
-    }
-  }
+    },
+  },
 };
 </script>
 
