@@ -252,7 +252,6 @@
                     .width("600px")
                     .currentView(petadd_update, {})
                     .then(data => {
-                        this.getPerson();
                     })
                     .show();
             },

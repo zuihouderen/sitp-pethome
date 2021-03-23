@@ -55,7 +55,7 @@
     </div>
 
     <div  class="body-right">
-        <el-button type="primary" size="middle" style="margin-left: 120px;margin-bottom: 10px">添加宠物日志</el-button>
+        <el-button type="primary" size="middle" style="margin-left: 120px;margin-bottom: 10px" @click="goAdd">添加宠物日志</el-button>
         <el-timeline  >
             <el-timeline-item timestamp="2018/4/12" placement="top" v-for="item in 10" >
                 <el-card :body-style="{ padding: '0px', }" shadow="hover">
@@ -89,15 +89,21 @@
             </el-timeline-item>
         </el-timeline>
     </div>
+    <Dialog></Dialog>
 </div>
 </template>
 
 <script>
+    import Dialog from "@common/dialog.vue";
     import { checkname} from "@assets/validate.js";
     import UploadImage from "@common/UploadImage.vue";
+    import petadd_update from "./dialog/petadd_update";
+    import blogadd from "./dialog/blogadd";
     export default {
         components: {
-            UploadImage
+            UploadImage,
+            Dialog
+
         },
         name: "petdetail",
         data(){
@@ -234,6 +240,14 @@
             getSrc(src) {
                 this.form.img = src;
             },
+            goAdd(){
+                this.Dialog.title("添加宠物日志")
+                    .width("600px")
+                    .currentView(blogadd, {})
+                    .then(data => {
+                    })
+                    .show();
+            }
 
         },
 
