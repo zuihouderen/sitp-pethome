@@ -14,7 +14,7 @@
         <i v-if="num==0" class="el-icon-message-solid menu-icon"></i>
         <el-badge v-else :value="num" class="item">
           <el-popover placement="bottom" width="180" trigger="click">
-            <p v-for="item in list">
+            <p v-for="item in list" :key="item.id">
               <span v-if="item.type=='invest'">充值申请被</span>
               <span v-else-if="item.type=='care'">寄养申请被</span>
               <span v-else-if="item.type=='long'">延长申请被</span>

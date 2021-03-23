@@ -20,7 +20,7 @@ export default {
       dialogVisible: false,
       title: "",
       width: "",
-      closeOnClickModal: false,
+      closeOnClickModal: true,
       currentView: null
     };
   },

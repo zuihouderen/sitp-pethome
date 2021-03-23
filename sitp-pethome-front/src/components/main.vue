@@ -101,7 +101,7 @@
             <el-image
               class="picture"
               :src="item"
-              :preview-src-list="[item]"
+              @click="goPetDetail(item)"
             ></el-image>
           </el-col>
         </el-row>
@@ -270,14 +270,18 @@
         </div>
       </el-col>
     </el-row>
+    <Dialog></Dialog>
   </div>
 </template>
 <script>
 import AreaSelection from "@common/AreaSelection.vue";
 import Util from "@assets/Util.js";
+import detail from "./pet/detail.vue";
+import Dialog from "@common/dialog.vue";
 export default {
   components: {
     AreaSelection,
+    Dialog,
   },
   data() {
     return {
@@ -376,6 +380,15 @@ export default {
         if (res.data.success) {
         }
       });
+    },
+    goPetDetail(row) {
+      this.Dialog.title("宠物详情")
+        .width("500px")
+        .currentView(detail, { row })
+        .then((data) => {
+
+        })
+        .show();
     },
     dealMyDate(v) {
       let len = this.calendarDate.length;
