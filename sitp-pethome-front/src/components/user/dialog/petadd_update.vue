@@ -29,7 +29,7 @@
           <el-option value="dog" label="狗狗"></el-option>
           <el-option value="cat" label="猫咪"></el-option>
           <el-option value="pig" label="小香猪"></el-option>
-          <el-option value="pig" label="鱼类"></el-option>
+          <el-option value="fish" label="鱼类"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="性别：" label-width="100px" prop="gender">
@@ -77,7 +77,6 @@ export default {
         description: ""
       },
       imageUrl: "",
-      edit: false,
       rules: {
         name: [
           { validator: checkname, types: "名字" },

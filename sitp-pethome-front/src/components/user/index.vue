@@ -69,10 +69,11 @@
                         <el-carousel :interval="1500" type="card" height="200px" indicator-position="none">
                             <el-carousel-item v-for="item in petList" :key="item" style="border-radius: 5px">
                                 <el-image
-                                        style="width: 100%;display: block"
-                                        :src=item.img
-                                        @click="goDetail(item.id)">
+                                        style="height: 80%;display: block"
+                                        :src=item.pet_img
+                                        @click="goDetail(item.pet_id)">
                                 </el-image>
+                                <span class="font-25">{{item.pet_name}}</span>
                             </el-carousel-item>
                         </el-carousel>
                     </div>
