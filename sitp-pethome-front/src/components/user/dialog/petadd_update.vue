@@ -13,16 +13,15 @@
       <el-form-item label="名字：" label-width="100px" prop="name">
         <el-input type="text" size="small" class="formlist" v-model="form.name"></el-input>
       </el-form-item>
-      <el-form-item label="生日：" label-width="100px" prop="birthday">
-        <el-date-picker v-model="form.birthday" type="date" class="formlist" size="small"></el-date-picker>
+      <el-form-item label="年龄：" label-width="100px" prop="age">
+        <el-input v-model="form.age" type="text" class="formlist" size="small"></el-input>
       </el-form-item>
-      <el-form-item label="价格：" label-width="100px" prop="price">
+      <el-form-item label="主人：" label-width="100px" prop="host" hidden>
         <el-input
           type="text"
           size="small"
           class="formlist"
-          v-model.number="form.price"
-          oninput="if(value.length>10)value=value.slice(0,10)"
+          v-model="form.host"
         ></el-input>
       </el-form-item>
       <el-form-item label="种类：" label-width="100px" prop="type">
@@ -30,19 +29,17 @@
           <el-option value="dog" label="狗狗"></el-option>
           <el-option value="cat" label="猫咪"></el-option>
           <el-option value="pig" label="小香猪"></el-option>
+          <el-option value="pig" label="鱼类"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="品种：" label-width="100px" prop="variety">
-        <el-input type="text" size="small" class="formlist" v-model="form.variety"></el-input>
-      </el-form-item>
-      <el-form-item label="性别：" label-width="100px" prop="sex">
-        <el-select size="small" class="formlist" v-model="form.sex">
-          <el-option value="男" label="男"></el-option>
-          <el-option value="女" label="女"></el-option>
+      <el-form-item label="性别：" label-width="100px" prop="gender">
+        <el-select size="small" class="formlist" v-model="form.gender">
+          <el-option value="1" label="男"></el-option>
+          <el-option value="0" label="女"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="备注：" label-width="100px" prop="note">
-        <el-input type="textarea" :rows="3" class="formlist" v-model="form.note"></el-input>
+      <el-form-item label="描述：" label-width="100px" prop="description">
+        <el-input type="textarea" :rows="3" class="formlist" v-model="form.description"></el-input>
       </el-form-item>
     </el-form>
     <div class="center">
@@ -53,34 +50,31 @@
 </template>
 
 <script>
-import { checkname, checkinput } from "@assets/validate.js";
+import { checkname} from "@assets/validate.js";
 import UploadImage from "@common/UploadImage.vue";
 export default {
   components: {
     UploadImage
   },
   data() {
-    var checkBirthday = (rule, value, callback) => {
-      if (
-        this.moment(value).valueOf() >
-        this.moment()
-          .startOf("day")
-          .valueOf()
-      ) {
-        return callback(new Error("生日必须大于当天"));
+    let validateAmount = (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error("年龄不能为空"));
+      }  else if (value > 20 || value <= 0) {
+        return callback(new Error(`请输入0-20范围的值`));
+      } else {
+        return callback();
       }
-      callback();
     };
     return {
       form: {
-        picture: "",
+        img: "",
         name: "",
-        birthday: "",
-        price: "",
+        age: "",
+        host: this.$store.getters.getUser.user_id,
         type: "cat",
-        variety: "",
-        sex: "女",
-        note: ""
+        gender: "1",
+        description: ""
       },
       imageUrl: "",
       edit: false,
@@ -89,66 +83,28 @@ export default {
           { validator: checkname, types: "名字" },
           { min: 1, max: 5, message: "长度在1到5个字符" }
         ],
-        birthday: [
-          { validator: checkinput, trigger: "blur", message: "生日不能为空" },
-          {
-            validator: checkBirthday,
-            trigger: "blur",
-            message: "生日必须大于当天"
-          }
+        age: [
+          { validator: validateAmount },
         ],
-        price: [{ type: "number", message: "价格必须为数字值" }],
-        variety: [
-          { validator: checkname, types: "种类" },
-          { min: 1, max: 10, message: "长度在1到10个字符" }
-        ],
-        note: [{ min: 0, max: 300, message: "长度在0到300个字符" }]
+        description: [{ min: 0, max: 300, message: "长度在0到300个字符" }]
       }
     };
-  },
-  mounted() {
-    this.form.status = "saling";
-    if (this.DialogParams().row) {
-      let obs = this.DialogParams().row;
-      this.form = obs;
-      if (obs.picture != null) this.imageUrl = obs.picture;
-      this.edit = true;
-    }
-    if (this.DialogParams().pet) {
-      this.form.status = "caring";
-      if (!this.DialogParams().pet.pet) {
-        this.form = this.DialogParams().pet;
-        this.imageUrl = this.DialogParams().pet.picture;
-      }
-    }
   },
   methods: {
     goAdd() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          this.form.birthday = this.moment(this.form.birthday).format(
-            "YYYY-MM-DD"
-          );
-          if (this.form.status == "caring" && !this.edit) {
-            this.closeDialog(this.form);
-          } else if (this.form.picture == "") {
+        if (this.form.img == "") {
             this.$message.warning("请选择图片！");
-          } else {
-            if (this.edit) {
-              this.axios.put("/api/pet/update", this.form).then(res => {
-                if (res.data.success) {
-                  this.$message.success("编辑成功！");
-                  this.closeDialog();
-                }
-              });
-            } else {
-              this.axios.post("/api/pet/add", this.form).then(res => {
-                if (res.data.success) {
+          }else {
+              this.axios.post("http://127.0.0.1:5000/pets/add_pet", this.form).then(res => {
+                console.log(res.data)
+                if (res.data.flag) {
                   this.$message.success("添加成功！");
                   this.closeDialog();
+                  this.close();
                 }
               });
-            }
           }
         } else {
           return false;
@@ -156,10 +112,11 @@ export default {
       });
     },
     getSrc(src) {
-      this.form.picture = src;
+      this.form.img = src;
     },
     goClose() {
-      this.closeDialog();
+      console.log("close...")
+     this.closeDialog();
     }
   }
 };

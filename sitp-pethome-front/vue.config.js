@@ -37,7 +37,7 @@ module.exports = {
         // 如果要代理 websockets
         ws: true,
         // 将主机标头的原点更改为目标URL
-        changeOrigin: false
+        changeOrigin: true
       }
     }
   }

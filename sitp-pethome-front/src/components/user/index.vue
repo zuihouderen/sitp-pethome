@@ -53,11 +53,11 @@
                     <span class="font-25">我的关注</span>
                     <div class="person-boder">
                         <el-carousel :interval="1500" type="card" height="200px" indicator-position="none">
-                            <el-carousel-item v-for="item in 10" :key="item" style="border-radius: 5px">
+                            <el-carousel-item v-for="item in follows" :key="item" style="border-radius: 5px">
                                 <el-image
                                         style="width: 100%;display: block"
-                                        src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"
-                                        @click="goDetail(item)">
+                                       :src="follows.user_img"
+                                        @click="goDetail(item.id)">
                                 </el-image>
                             </el-carousel-item>
                         </el-carousel>
@@ -67,11 +67,11 @@
                     <span class="font-25" @click="goAdd">我的宠物</span>
                     <div class="person-boder">
                         <el-carousel :interval="1500" type="card" height="200px" indicator-position="none">
-                            <el-carousel-item v-for="item in 10" :key="item" style="border-radius: 5px">
+                            <el-carousel-item v-for="item in petList" :key="item" style="border-radius: 5px">
                                 <el-image
                                         style="width: 100%;display: block"
-                                        src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"
-                                        @click="goDetail(item)">
+                                        :src=item.img
+                                        @click="goDetail(item.id)">
                                 </el-image>
                             </el-carousel-item>
                         </el-carousel>
@@ -131,6 +131,8 @@
                 }
             };
             return {
+                petList:[],
+                follows:[],
                 isShowImageDialog: false,
                 imageUrl: "",
                 form: {
@@ -165,6 +167,8 @@
         },
         created() {
             this.getPerson();
+            this.getPets();
+            // this.getFollows();
         },
         methods: {
             getPerson() {
@@ -250,6 +254,34 @@
                         this.getPerson();
                     })
                     .show();
+            },
+            /**
+             * 获取宠物列表
+             */
+            getPets(){
+                this.axios
+                    .get("http://127.0.0.1:5000/user/get_mypets")
+                    .then(res => {
+                        console.log(res.data);
+                        if (res.data.flag) {
+                            console.log(res.data.data.rows);
+                         this.petList=res.data.data.rows;
+                        }
+                    });
+            },
+            /**
+             * 获取关注列表
+             */
+            getFollows(){
+                this.axios
+                    .get("http://127.0.0.1:5000/user/get_myfollow")
+                    .then(res => {
+                        console.log(res.data);
+                        if (res.data.flag) {
+                            console.log(res.data.data.rows);
+                            this.follows=res.data.data.rows;
+                        }
+                    });
             }
         }
     };

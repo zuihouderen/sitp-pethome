@@ -12,38 +12,10 @@
           <i class="el-icon-collection"></i>收藏夹
         </span>
         <i v-if="num==0" class="el-icon-message-solid menu-icon"></i>
-        <el-badge v-else :value="num" class="item">
-          <el-popover placement="bottom" width="180" trigger="click">
-            <p v-for="item in list">
-              <span v-if="item.type=='invest'">充值申请被</span>
-              <span v-else-if="item.type=='care'">寄养申请被</span>
-              <span v-else-if="item.type=='long'">延长申请被</span>
-              <span v-else-if="item.type=='back'">领回申请被</span>
-              <span v-else-if="item.type=='upload'">投稿申请被</span>
-
-              <span v-if="item.status=='yes'">同意啦！</span>
-              <span v-else-if="item.status=='refuse'">拒绝啦！</span>
-              <span v-else-if="item.status=='agreed'">同意啦！</span>
-              <span v-else-if="item.status=='refused'">拒绝啦！</span>
-              <span v-else-if="item.status=='end'">同意啦！</span>
-              <i
-                class="el-icon-circle-close"
-                style="margin-left:30px;cursor: pointer;"
-                @click="goRead(item)"
-              ></i>
-            </p>
-            <p style="text-align:center; margin-bottom:0px;">
-              <el-button size="mini" @click="goAllRead">全部已读</el-button>
-            </p>
-            <i class="el-icon-message-solid menu-icon" slot="reference"></i>
-          </el-popover>
-        </el-badge>
         <el-dropdown @command="goUrl">
-          <span class="mouser">{{$store.state.nickname}}</span>
+          <span class="mouser">{{$store.getters.getUser.user_name}}</span>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item command="/shpping/person">个人中心</el-dropdown-item>
-            <el-dropdown-item command="/shpping/cost">充值</el-dropdown-item>
-            <el-dropdown-item command="/shpping/order">我的消费</el-dropdown-item>
+            <el-dropdown-item command="/user/index">个人中心</el-dropdown-item>
             <el-dropdown-item command="/login">退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>

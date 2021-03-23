@@ -35,6 +35,8 @@
 </template>
 
 <script>
+import Util from "../assets/Util";
+
 export default {
   props: {
     imageUrl: {
@@ -50,14 +52,8 @@ export default {
   methods: {
     //用自己方法覆盖默认上传行为，不需要利用默认钩子函数
     upload(file) {
-      let OSS = require("ali-oss");
-      const client = new OSS({
-        region: "oss-cn-hangzhou",
-        accessKeyId: "LTAIMYW16QYY4WTH",
-        accessKeySecret: "5I2HVy0oFPyeg3BHO1fUhzHGZvjvKp",
-        bucket: "mmzdpicture"
-      });
-      var fileName = "mmzdtx" + file.file.uid;
+      const client = Util.createAliOss();
+      var fileName = "sitp" + file.file.uid;
       client
         .put(fileName, file.file)
         .then(result => {
@@ -70,17 +66,7 @@ export default {
     },
     //上传图片前检验图片格式
     beforeAvatarUpload(file) {
-      const isJPG = file.type === "image/jpeg";
-      const isLt2M = file.size / 1024 / 1024 < 2;
-      const isPNG = file.type === "image/png";
-      if (!isJPG && !isPNG) {
-        this.$message.error("上传图片只能是 JPG和PNG 格式!");
-        return false;
-      }
-      if (!isLt2M) {
-        this.$message.error("上传图片大小不能超过 2MB!");
-        return false;
-      }
+     return Util.beforeAvatarUpload(file);
     }
   }
 };
