@@ -1,7 +1,10 @@
 <template>
 <div >
     <div style="width: 25%;position: absolute">
-        <span class="font-25" >宠物详情</span>
+        <div style="text-align: center">
+            <span class="font-25" style="margin-left: 20px" >宠物详情</span>
+        </div>
+
         <br/>
         <el-form
                 label-position="right"
@@ -45,13 +48,14 @@
             </el-form-item>
         </el-form>
         <div class="center">
-            <el-button type="primary" size="small" @click="goUpdate">保存</el-button>
-            <el-button size="small" @click="">取消</el-button>
-            <el-button size="small" type="danger" @click="">删除</el-button>
+            <el-button type="primary" size="small" @click="goUpdate">修改</el-button>
+            <el-button size="small" @click="goReset">重置</el-button>
+            <el-button size="small" type="danger" @click="goDel">删除</el-button>
         </div>
     </div>
 
     <div  class="body-right">
+        <el-button type="primary" size="middle" style="margin-left: 120px;margin-bottom: 10px">添加宠物日志</el-button>
         <el-timeline  >
             <el-timeline-item timestamp="2018/4/12" placement="top" v-for="item in 10" >
                 <el-card :body-style="{ padding: '0px', }" shadow="hover">
@@ -175,7 +179,7 @@
                         this.form.host=result.pet_host;
                         this.form.description=result.pet_description;
                         this.form.type=result.pet_type;
-                        this.form.gender=result.pet_gender;
+                        this.form.gender=result.pet_gender+"";
                         this.form.id=result.pet_id;
                     }
                 })
@@ -189,15 +193,42 @@
                             this.axios.post("http://127.0.0.1:5000/pets/modify_pet", this.form).then(res => {
                                 console.log(res.data);
                                 if (res.data.flag) {
+                                    this.old.pet_img= this.form.img;
+                                    this.old.pet_name=this.form.name;
+                                    this.old.pet_age= this.form.age;
+                                    this.old.pet_host= this.form.host;
+                                    this.old.pet_description= this.form.description;
+                                    this.old.pet_type=this.form.type;
+                                    this.old.pet_gender= this.form.gender;
+                                    this.old.pet_id=this.form.id;
                                     this.$message.success("修改成功！");
-                                    this.closeDialog();
-                                    this.close();
                                 }
                             });
                         }
                     } else {
                         return false;
                     }
+                });
+            },
+            goReset(){
+                this.imageUrl=this.old.pet_img;
+                this.form.img=this.old.pet_img;
+                this.form.name=this.old.pet_name;
+                this.form.age=this.old.pet_age;
+                this.form.host=this.old.pet_host;
+                this.form.description=this.old.pet_description;
+                this.form.type=this.old.pet_type;
+                this.form.gender=this.old.pet_gender+"";
+                this.form.id=this.old.pet_id;
+            },
+            goDel(){
+                this.$confirm("确认删除的宠物吗？", "提示", {
+                    confirmButtonText: "确定",
+                    cancelButtonText: "取消"
+                }).then(() => {
+                    setTimeout(()=>{
+
+                    },2000)
                 });
             },
             getSrc(src) {
@@ -211,7 +242,7 @@
 
 <style scoped>
 .body-right{
-    width: 75%;
+    width: 70%;
     margin-left: 25%;
     height: 100%;
 }
