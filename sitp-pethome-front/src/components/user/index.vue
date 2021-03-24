@@ -24,7 +24,7 @@
                     <el-col :span=15>
                         <el-form label-position="right" :model="form" :rules="rules" ref="form" class="form">
                             <el-form-item label="姓名：" class="form-item-padding" prop="user_name" :inline-message="true">
-                                <el-input type="text" size="small" class="formlist" v-model="form.user_name"></el-input>
+                                <el-input type="text" size="small" class="formlist" v-model="form.user_name" disabled></el-input>
                             </el-form-item>
                             <el-form-item label="性别：" class="form-item-padding" prop="user_gender">
                                 <el-select size="small" class="formlist" v-model="form.user_gender">
@@ -48,12 +48,74 @@
             </div>
         </div>
         <div>
-            <el-row gutter="20px">
+            <span class="font-25" @click="goAddAct(form.user_name)">我的活动</span>
+            <div class="person-boder">
+                <el-carousel :interval="2500" type="card" height="400px" indicator-position="none">
+                    <el-carousel-item v-for="(item ,index) in activities"  style="border-radius: 5px">
+                        <div >
+                            <el-row>
+                                <el-col :span="8">
+                                    <el-image
+                                            src="https://sitp.oss-cn-shanghai.aliyuncs.com/sitp1616595846301"
+                                            fit="cover"
+                                            style="height: 400px"
+                                    >
+                                    </el-image>
+                                </el-col>
+                                <el-col :span="16" style="margin-top: 20px">
+                                    <el-form
+                                            :model="actform" :rules="rules1" ref="actform" label-position="right"
+                                    >
+                                        <el-form-item label="活动名称：" label-width="100px" prop="title" hidden>
+                                            <el-input
+                                                    type="text"
+                                                    size="small"
+                                                    class="formlist"
+                                                    @input="actform.id"
+                                                    :value="item.activity_id"
+                                            ></el-input>
+                                        </el-form-item>
+                                        <el-form-item label="活动名称：" label-width="100px" prop="title">
+                                            <el-input
+                                                    type="text"
+                                                    size="small"
+                                                    class="formlist"
+                                                    @input="actform.title"
+                                                    :value="item.activity_title"
+                                            ></el-input>
+                                        </el-form-item>
+                                        <el-form-item label="活动地址：" label-width="100px" prop="address">
+                                            <el-input type="text"  class="formlist" @input="actform.address"
+                                                      :value="item.activity_address"
+                                            ></el-input>
+                                        </el-form-item>
+                                        <el-form-item label="活动主持：" label-width="100px" prop="host" >
+                                            <el-input type="text"  class="formlist" @input="actform.host" :value="item.activity_host" disabled></el-input>
+                                        </el-form-item>
+                                        <el-form-item label="活动内容：" label-width="100px" prop="content">
+                                            <el-input type="textarea" :rows="4" class="formlist" @input="actform.content"
+                                            :value="item.activity_content"></el-input>
+                                        </el-form-item>
+                                    </el-form>
+                                    <div class="center" v-if="item.activity_host==form.user_name">
+                                        <el-button type="primary" size="small" @click="">修改</el-button>
+                                        <el-button size="small" type="danger" @click="">删除</el-button>
+                                    </div>
+                                </el-col>
+                            </el-row>
+                        </div>
+                    </el-carousel-item>
+                </el-carousel>
+            </div>
+        </div>
+
+        <div>
+            <el-row >
                 <el-col :span="12">
                     <span class="font-25">我的关注</span>
                     <div class="person-boder">
-                        <el-carousel :interval="1500" type="card" height="200px" indicator-position="none">
-                            <el-carousel-item v-for="item in follows" :key="item" style="border-radius: 5px">
+                        <el-carousel :interval="1500" type="card" height="250px" indicator-position="none">
+                            <el-carousel-item v-for="item in follows"  style="border-radius: 5px">
                                 <el-image
                                         style="width: 100%;display: block"
                                        :src="follows.user_img"
@@ -66,8 +128,8 @@
                 <el-col :span="12">
                     <span class="font-25" @click="goAdd">我的宠物</span>
                     <div class="person-boder">
-                        <el-carousel :interval="1500" type="card" height="200px" indicator-position="none">
-                            <el-carousel-item v-for="item in petList" :key="item" style="border-radius: 5px">
+                        <el-carousel :interval="1500" type="card" height="250px" indicator-position="none">
+                            <el-carousel-item v-for="item in petList"  style="border-radius: 5px">
                                 <el-image
                                         style="height: 80%;display: block"
                                         :src=item.pet_img
@@ -116,6 +178,7 @@
     import Dialog from "@common/dialog.vue";
     import psd from "./psd.vue";
     import petadd_update from "./dialog/petadd_update";
+    import actadd from "./dialog/actadd";
     export default {
         components: {
             Dialog
@@ -134,6 +197,20 @@
             return {
                 petList:[],
                 follows:[],
+                activities:[{
+                    activity_address: "上海",
+                    activity_content: "而我却",
+                    activity_date: "2021-03-24 23:03:58",
+                    activity_host: "haijun",
+                    activity_id: 3,
+                    activity_title: "活动以",
+                }],
+                actform:{
+                    host:'haijun',
+                    content:'这hi是一个活动',
+                    title:'活动1',
+                    address:'上海嘉定'
+                },
                 isShowImageDialog: false,
                 imageUrl: "",
                 form: {
@@ -163,15 +240,45 @@
                     user_age: [
                         { validator: validateAmount },
                     ]
-                }
+                },
+                rules1: {
+                    title: [
+                        {
+                            validator: checkinput,
+                            trigger: "blur",
+                            message: "活动名字不能为空"
+                        }
+                    ],
+                    address: [
+                        {
+                            validator: checkinput,
+                            trigger: "blur",
+                            message: "活动地址不能为空"
+                        }
+                    ],
+                    content: [{ min: 0, max: 300, message: "长度在0到300个字符" }]
+                },
             };
         },
         created() {
             this.getPerson();
             this.getPets();
-            // this.getFollows();
+            this.getFollows();
+            this.getActivities();
         },
         methods: {
+            getActivities(){
+                this.axios
+                    .get("http://127.0.0.1:5000/activity")
+                    .then(res => {
+                        console.log(res.data);
+                        if (res.data.flag) {
+                            console.log(res.data.data.rows);
+                            this.activities=res.data.data.rows;
+                        }
+                    });
+            },
+
             getPerson() {
                 this.axios
                     .get("http://127.0.0.1:5000/user/get_myinfo")
@@ -252,6 +359,19 @@
                     .width("600px")
                     .currentView(petadd_update, {})
                     .then(data => {
+                        this.getPets();
+                    })
+                    .show();
+            },
+            /**
+             *添加活动
+             */
+            goAddAct(host){
+                this.Dialog.title("添加活动")
+                    .width("600px")
+                    .currentView(actadd, {host})
+                    .then(data => {
+                        this.getActivities();
                     })
                     .show();
             },

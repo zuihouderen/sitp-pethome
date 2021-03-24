@@ -113,6 +113,7 @@ export default {
                       }
                     });
                 } else {
+                  _this.$message.warning("用户名或者密码错误");
                   _this.generatedCode();
                   _this.$nextTick(() => {
                     _this.$refs.loginform.resetFields();

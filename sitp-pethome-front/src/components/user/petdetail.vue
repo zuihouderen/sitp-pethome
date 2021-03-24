@@ -16,7 +16,7 @@
                 <UploadImage @src="getSrc" :imageUrl="imageUrl"></UploadImage>
             </el-form-item>
             <el-form-item label="名字：" label-width="100px" prop="name">
-                <el-input type="text" size="small" class="formlist" v-model="form.name"></el-input>
+                <el-input type="text" size="small" class="formlist" v-model="form.name" disabled></el-input>
             </el-form-item>
             <el-form-item label="年龄：" label-width="100px" prop="age">
                 <el-input v-model="form.age" type="text" class="formlist" size="small"></el-input>
@@ -55,36 +55,38 @@
     </div>
 
     <div  class="body-right">
-        <el-button type="primary" size="middle" style="margin-left: 120px;margin-bottom: 10px" @click="goAdd">添加宠物日志</el-button>
+        <el-button type="primary" size="middle" style="margin-left: 120px;margin-bottom: 10px" @click="goAdd(form.name)">添加宠物日志</el-button>
         <el-timeline  >
-            <el-timeline-item timestamp="2018/4/12" placement="top" v-for="item in 10" >
-                <el-card :body-style="{ padding: '0px', }" shadow="hover">
-                  <el-row :gutter="20">
-                      <el-col span="6">
-                          <el-image src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"
-                                    style="display: block;width: 100%;"
-                                    fit="cover"
-                          />
-                      </el-col>
-                      <el-col span="18">
-                          <el-form :label-position="left" label-width="80px" :model="petlog">
-                              <el-form-item label="名称">
-                                  <el-input v-model="petlog.name"></el-input>
-                              </el-form-item>
-                              <el-form-item label="活动区域">
-                                  <el-input v-model="petlog.content"></el-input>
-                              </el-form-item>
-                              <el-form-item label="活动形式">
-                                  <el-input v-model="petlog.type"></el-input>
-                              </el-form-item>
-                              <div class="center" style="margin-bottom: 5px;margin-top: -5px">
-                                  <el-button type="primary" size="small" @click="">保存</el-button>
-                                  <el-button size="small" @click="">取消</el-button>
-                                  <el-button size="small" type="danger" @click="">删除</el-button>
-                              </div>
-                          </el-form>
-                      </el-col>
-                  </el-row>
+            <el-timeline-item :timestamp="blogform.date" placement="top" v-for="item in 5" s>
+                <el-card shadow="hover" style="background-color: rgba(137,209,238,0.07);">
+                              <el-form
+                                      label-position="right"
+                                      :model="blogform"
+                                      :rules="rules1"
+                                      style="margin-left: 200px"
+                                      ref="blogform"
+                              >
+                                  <el-form-item label="" label-width="100px">
+                                      <UploadImage @src="getSrc1" :imageUrl="blogform.img"></UploadImage>
+                                  </el-form-item>
+                                  <el-form-item label="日志名称：" label-width="100px" prop="title">
+                                      <el-input
+                                              type="text"
+                                              size="small"
+                                              class="formlist"
+                                              v-model="blogform.title"
+                                      ></el-input>
+                                  </el-form-item>
+                                  <el-form-item label="日志描述：" label-width="100px" prop="description">
+                                      <el-input type="textarea" :rows="3" class="formlist" v-model="blogform.description"></el-input>
+                                  </el-form-item>
+                              </el-form>
+                    <div class="center" style="margin-bottom: 5px;margin-top: -5px">
+                        <el-button type="primary" size="small" @click="">保存</el-button>
+                        <el-button size="small" @click="">取消</el-button>
+                        <el-button size="small" type="danger" @click="">删除</el-button>
+                    </div>
+
                 </el-card>
             </el-timeline-item>
         </el-timeline>
@@ -117,6 +119,15 @@
                 }
             };
             return{
+                blogform:{
+                    id:'',
+                    img:'',
+                    title: "",
+                    description: "",
+                    shared:'0',
+                    owner:'',
+                    date:'',
+                },
                 form: {
                     id:"",
                     img: "",
@@ -145,6 +156,16 @@
                     ],
                     age: [
                         { validator: validateAmount },
+                    ],
+                    description: [{ min: 0, max: 300, message: "长度在0到300个字符" }]
+                },
+                rules1: {
+                    title: [
+                        {
+                            validator: checkinput,
+                            trigger: "blur",
+                            message: "日志名字不能为空"
+                        }
                     ],
                     description: [{ min: 0, max: 300, message: "长度在0到300个字符" }]
                 },
@@ -217,15 +238,7 @@
                 });
             },
             goReset(){
-                this.imageUrl=this.old.pet_img;
-                this.form.img=this.old.pet_img;
-                this.form.name=this.old.pet_name;
-                this.form.age=this.old.pet_age;
-                this.form.host=this.old.pet_host;
-                this.form.description=this.old.pet_description;
-                this.form.type=this.old.pet_type;
-                this.form.gender=this.old.pet_gender+"";
-                this.form.id=this.old.pet_id;
+                this.getPet(this.form.id);
             },
             goDel(){
                 this.$confirm("确认删除的宠物吗？", "提示", {
@@ -240,12 +253,14 @@
             getSrc(src) {
                 this.form.img = src;
             },
-            goAdd(){
+            getSrc1(src) {
+                this.blogform.img = src;
+            },
+            goAdd(owner){
                 this.Dialog.title("添加宠物日志")
                     .width("600px")
-                    .currentView(blogadd, {})
-                    .then(data => {
-                    })
+                    .currentView(blogadd, {owner})
+                    .then()
                     .show();
             }
 
