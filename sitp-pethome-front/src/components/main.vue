@@ -321,6 +321,7 @@ export default {
       ],
       calendarDate: [],
       weatherdata: {},
+      petsData: [],
     };
   },
   created() {
@@ -365,22 +366,26 @@ export default {
     getWeatherIcon(i) {
       return Util.getWeatherIcon(i);
     },
+
     getPetList() {
       this.axios("/api/pets/list").then((res) => {
-        if (res.data.success) {
+        if (res.data.flag) {
+            this.petsData = res.data.rows
         }
       });
     },
+
     getPet(id) {
       this.axios("/api/pets/", {
         params: {
           id: id,
         },
       }).then((res) => {
-        if (res.data.success) {
+        if (res.data.flag) {
         }
       });
     },
+
     goPetDetail(row) {
       this.Dialog.title("宠物详情")
         .width("500px")
@@ -390,6 +395,7 @@ export default {
         })
         .show();
     },
+    
     dealMyDate(v) {
       let len = this.calendarDate.length;
       let res = "";

@@ -8,15 +8,15 @@
       <div class="pet-info-box">
         <div>
           <span>编号：</span>
-          <span>{{form.petid}}</span>
+          <span>{{form.pet_id}}</span>
         </div>
         <div>
           <span>性别：</span>
-          <span>{{form.sex}}</span>
+          <span>{{form.pet_gender}}</span>
         </div>
         <div>
           <span>年龄：</span>
-          <span>{{form.age}}</span>
+          <span>{{form.pet_age}}</span>
         </div>
         <div>
           <span>状态：</span>
@@ -31,8 +31,8 @@
         </div>
         <div>
           <span>种类：</span>
-          <span v-if="form.type=='cat'">猫咪</span>
-          <span v-else-if="form.type=='dog'">狗狗</span>
+          <span v-if="form.pet_type=='cat'">猫咪</span>
+          <span v-else-if="form.pet_type=='dog'">狗狗</span>
           <span v-else>香猪</span>
         </div>
         <div>
@@ -43,7 +43,7 @@
     </div>
     <div>
       <p class="pet-info">介绍：</p>
-      <el-input type="textarea" :rows="3" :readonly="true" class="textarea" v-model="form.note"></el-input>
+      <el-input type="textarea" :rows="3" :readonly="true" class="textarea" v-model="form.pet_description"></el-input>
     </div>
 
     <div class="pet-button-box">
