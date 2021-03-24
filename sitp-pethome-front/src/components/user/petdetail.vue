@@ -97,7 +97,7 @@
 
 <script>
     import Dialog from "@common/dialog.vue";
-    import { checkname} from "@assets/validate.js";
+    import { checkname,checkinput} from "@assets/validate.js";
     import UploadImage from "@common/UploadImage.vue";
     import petadd_update from "./dialog/petadd_update";
     import blogadd from "./dialog/blogadd";
@@ -171,13 +171,12 @@
                 },
                 count:10,
                 loading: false,
-                petlog:[],
 
             }
         },
         created() {
             let pet_id=this.$route.params.id;
-            console.log(pet_id)
+            console.log(pet_id);
             this.getPet(pet_id);
 
         },

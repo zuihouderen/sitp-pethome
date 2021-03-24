@@ -65,35 +65,34 @@
                                 <el-col :span="16" style="margin-top: 20px">
                                     <el-form
                                             :model="actform" :rules="rules1" ref="actform" label-position="right"
-                                    >
-                                        <el-form-item label="活动名称：" label-width="100px" prop="title" hidden>
-                                            <el-input
-                                                    type="text"
-                                                    size="small"
-                                                    class="formlist"
-                                                    @input="actform.id"
-                                                    :value="item.activity_id"
-                                            ></el-input>
-                                        </el-form-item>
+                                        >
                                         <el-form-item label="活动名称：" label-width="100px" prop="title">
                                             <el-input
                                                     type="text"
                                                     size="small"
                                                     class="formlist"
-                                                    @input="actform.title"
                                                     :value="item.activity_title"
                                             ></el-input>
                                         </el-form-item>
+                                        <el-form-item label="创建时间：" label-width="100px" prop="date" >
+                                            <el-input
+                                                    type="text"
+                                                    size="small"
+                                                    class="formlist"
+                                                    :value="item.activity_date"
+                                            ></el-input>
+                                        </el-form-item>
+
                                         <el-form-item label="活动地址：" label-width="100px" prop="address">
-                                            <el-input type="text"  class="formlist" @input="actform.address"
+                                            <el-input type="text"  class="formlist"
                                                       :value="item.activity_address"
                                             ></el-input>
                                         </el-form-item>
                                         <el-form-item label="活动主持：" label-width="100px" prop="host" >
-                                            <el-input type="text"  class="formlist" @input="actform.host" :value="item.activity_host" disabled></el-input>
+                                            <el-input type="text"  class="formlist" :value="item.activity_host" disabled></el-input>
                                         </el-form-item>
                                         <el-form-item label="活动内容：" label-width="100px" prop="content">
-                                            <el-input type="textarea" :rows="4" class="formlist" @input="actform.content"
+                                            <el-input type="textarea" :rows="2" class="formlist"
                                             :value="item.activity_content"></el-input>
                                         </el-form-item>
                                     </el-form>
@@ -117,10 +116,13 @@
                         <el-carousel :interval="1500" type="card" height="250px" indicator-position="none">
                             <el-carousel-item v-for="item in follows"  style="border-radius: 5px">
                                 <el-image
-                                        style="width: 100%;display: block"
-                                       :src="follows.user_img"
-                                        @click="goDetail(item.id)">
+                                        style="height: 80%;display: block"
+                                       :src="item.followed_img"
+                                        >
                                 </el-image>
+                                <div class="center">
+                                    <span style="font-size: 25px">{{item.followed_name}}</span>
+                                </div>
                             </el-carousel-item>
                         </el-carousel>
                     </div>
@@ -135,7 +137,9 @@
                                         :src=item.pet_img
                                         @click="goDetail(item.pet_id)">
                                 </el-image>
-                                <span class="font-25">{{item.pet_name}}</span>
+                                <div class="center">
+                                    <span class="font-25">{{item.pet_name}}</span>
+                                </div>
                             </el-carousel-item>
                         </el-carousel>
                     </div>
@@ -196,7 +200,14 @@
             };
             return {
                 petList:[],
-                follows:[],
+                follows:[{
+                    followed_age: 23,
+                    followed_gender: 1,
+                    followed_id: 1,
+                    followed_img: "http://sitp.oss-cn-shanghai.aliyuncs.com/sitp1616601225037",
+                    followed_name: "hh",
+                    follower_id: 4,
+                }],
                 activities:[{
                     activity_address: "上海",
                     activity_content: "而我却",
@@ -206,6 +217,7 @@
                     activity_title: "活动以",
                 }],
                 actform:{
+                    data:'',
                     host:'haijun',
                     content:'这hi是一个活动',
                     title:'活动1',
