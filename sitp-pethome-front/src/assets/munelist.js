@@ -451,6 +451,31 @@ const navlist = [{
             }
         }
         ]
+    },
+
+    {
+        adminMenu: {
+            id: 10,
+            menuName: "活动中心",
+            menuType: "list",
+            pid: "0",
+            url: "#",
+            sort: 10,
+            deep: 1,
+            code: "10"
+        },
+        children: [{
+            adminMenu: {
+                id: 91,
+                menuName: "活动列表",
+                menuType: "page",
+                pid: "10",
+                url: "/activity/index",
+                sort: 1,
+                deep: 2,
+                code: "101"
+            }
+        }]
     }
 ]
 export default {

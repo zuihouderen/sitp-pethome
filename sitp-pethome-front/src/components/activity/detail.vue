@@ -2,49 +2,31 @@
   <div>
     <div style="display:flex;">
       <div class="pet-detail-box">
-        <el-avatar shape="square" :size="120" :src="form.pet_img"></el-avatar>
-        <p class="pet-name">{{form.pet_name}}</p>
+        <el-avatar shape="square" :size="120" :src="form.activity_img"></el-avatar>
+        <p class="pet-name">{{form.activity_title}}</p>
       </div>
       <div class="pet-info-box">
         <div>
           <span>编号：</span>
-          <span>{{form.pet_id}}</span>
+          <span>{{form.activity_id}}</span>
         </div>
         <div>
-          <span>性别：</span>
-          <span v-if="form.pet_gender==0">母</span>
-          <span v-else>公</span>
+          <span>发起人：</span>
+          <span>{{form.activity_host}}</span>
         </div>
         <div>
-          <span>年龄：</span>
-          <span>{{form.pet_age}}</span>
+          <span>日期：</span>
+          <span>{{form.activity_date}}</span>
         </div>
         <div>
-          <span>状态：</span>
-          <span v-if="form.status=='saled'">售出</span>
-          <span v-else-if="form.status=='saling'">在售</span>
-          <span v-else-if="form.status=='caring'">寄养</span>
-          <span v-else>领回</span>
-        </div>
-        <div>
-          <span>价格：</span>
-          <span>{{form.price}}</span>
-        </div>
-        <div>
-          <span>种类：</span>
-          <span v-if="form.pet_type=='cat'">猫咪</span>
-          <span v-else-if="form.pet_type=='dog'">狗狗</span>
-          <span v-else></span>
-        </div>
-        <div>
-          <span>品种：</span>
-          <span>{{form.pet_variety}}</span>
+          <span>地址：</span>
+          <span>{{form.activity_address}}</span>
         </div>
       </div>
     </div>
     <div>
       <p class="pet-info">介绍：</p>
-      <el-input type="textarea" :rows="3" :readonly="true" class="textarea" v-model="form.pet_description"></el-input>
+      <el-input type="textarea" :rows="3" :readonly="true" class="textarea" v-model="form.activity_content"></el-input>
     </div>
 
     <div class="pet-button-box">
@@ -58,7 +40,7 @@
       ></el-button>
       <el-button v-else size="small" icon="el-icon-star-off" circle @click="goCollect"></el-button>
       <div class="pet-button">
-        <el-button type="primary" size="small" @click="goAdd">加入购物车</el-button>
+        <el-button type="primary" size="small" @click="goAdd">加入活动</el-button>
         <el-button size="small" @click="goClose">关闭</el-button>
       </div>
     </div>
@@ -128,7 +110,11 @@ export default {
     },
     goClose() {
       this.closeDialog();
-    }
+    },
+
+    goJoin() {
+      
+    },
   }
 };
 </script>

@@ -100,7 +100,7 @@ export default {
               })
               .then(res => {
                 if (res.data.success) {
-                  _this.setToken({ token: res.data.token }); //store中的为token赋值方法
+                  _this.setToken({ token: res.data.data.token }); //store中的为token赋值方法
                   _this.axios
                     .get("/api/user/get", {
                       params: {
@@ -109,7 +109,7 @@ export default {
                     })
                     .then(res => {
                       if (res.data.success) {
-                        _this.setUser({ user: res.data.message });
+                        _this.setUser({ user: res.data.data.rows });
                         _this.$router.push("/");
                       }
                     });

@@ -1,11 +1,15 @@
 <template>
   <div>
-    <div class="dog-button-box">
-      <div style="display:inline-block;">
-        <el-button type="primary" size="small" @click="goSeeOut">查看售出</el-button>
-        <el-button type="primary" size="small" @click="goSeeIn">查看在售</el-button>
+    <div class="pet-button-box">
+      <div style="display: inline-block">
+        <el-button type="primary" size="small" @click="goSeeOut"
+          >查看售出</el-button
+        >
+        <el-button type="primary" size="small" @click="goSeeIn"
+          >查看在售</el-button
+        >
       </div>
-      <div style="display:inline-block;">
+      <div style="display: inline-block">
         <input
           type="text"
           placeholder="¥"
@@ -14,7 +18,7 @@
           class="el-input__inner inputwidth"
           oninput="value=value.replace(/[^\d]/g,'');if(value.length>10)value=value.slice(0,10)"
         />
-        <span style="margin-left:5px;margin-right:5px;">-</span>
+        <span style="margin-left: 5px; margin-right: 5px">-</span>
         <input
           type="text"
           placeholder="¥"
@@ -23,60 +27,73 @@
           class="el-input__inner inputwidth"
           oninput="value=value.replace(/[^\d]/g,'');if(value.length>10)value=value.slice(0,10)"
         />
-        <el-button type="primary" size="small" style="margin-left:10px;" @click="goSearch">搜索</el-button>
+        <el-button
+          type="primary"
+          size="small"
+          style="margin-left: 10px"
+          @click="goSearch"
+          >搜索</el-button
+        >
       </div>
     </div>
-    <div v-if="petsData.length!=0">
-      <div class="dog-list-box" @click="goDetail(item)" v-for="(item, index) in petsData" :key="index">
+    <div v-if="activityData.length != 0">
+      <div
+        class="pet-list-box"
+        @click="goDetail(item)"
+        v-for="(item, index) in activityData"
+        :key="index"
+      >
         <div v-if="!seeOut">
-          <i class="el-icon-shopping-cart-2 dog-shopcar" @click.stop="goAddShop(item)"></i>
+          <i
+            class="el-icon-shopping-cart-2 pet-shopcar"
+            @click.stop="goAddShop(item)"
+          ></i>
           <el-button
             v-if="item.collect"
             type="danger"
             size="mini"
-            class="dog-collect"
+            class="pet-collect"
             icon="el-icon-star-off"
             @click.stop="goNoCollect(item)"
           ></el-button>
           <el-button
             v-else
-            class="dog-collect"
+            class="pet-collect"
             size="mini"
             icon="el-icon-star-off"
             plain
             @click.stop="goCollect(item)"
           ></el-button>
         </div>
-        <el-image class="dog-picture" :src="item.pet_img" fit="fill"></el-image>
-        <span class="dog-title">{{item.pet_name}}</span>
-        <div class="dog-info-box">
-          <span class="dog-info">{{item.pet_variety}}</span>
-          <span class="dog-info">{{item.pet_age}}</span>
+        <el-image class="pet-picture" :src="item.pet_img" fit="fill"></el-image>
+        <span class="pet-title">{{ item.activity_title }}</span>
+        <div class="pet-info-box">
+          <span class="pet-info">{{ item.activity_address }}</span>
+          <span class="pet-info">{{ item.activity_date }}</span>
         </div>
-        <div class="dog-info-box">
-          <span class="dog-info" v-if="item.pet_status=='saled'">售出</span>
-          <span class="dog-info" v-else>在售</span>
-          <span class="dog-info">{{item.pet_price}}</span>
+        <div class="pet-info-box">
+          <span class="pet-info" v-if="item.pet_status == 'saled'">售出</span>
+          <span class="pet-info" v-else>在售</span>
+          <span class="pet-info">{{ item.pet_price }}</span>
         </div>
       </div>
     </div>
-    <el-card class="box-card dog-card-box" v-else>
+    <el-card class="box-card pet-card-box" v-else>
       <div slot="header" class="clearfix">
         <span>告示</span>
       </div>
-      <p>暂无符合搜索要求的的宠物</p>
+      <p>暂无符合搜索要求的宠物</p>
     </el-card>
     <el-pagination
       @size-change="sizeChangeHandle"
       @current-change="currentChangeHandle"
       :current-page="page_no"
-      :page-sizes="[10,20,40,50]"
+      :page-sizes="[10, 20, 40, 50]"
       :page-size="page_size"
       :total="total"
       layout="total, sizes, prev, pager, next, jumper"
       class="fyclass"
     ></el-pagination>
-
     <Dialog></Dialog>
   </div>
 </template>
@@ -87,9 +104,9 @@ import detail from "./detail.vue";
 import Util from "@assets/Util.js";
 export default {
   components: {
-    Dialog
+    Dialog,
   },
-  name: "dog",
+  name: "index",
   data() {
     return {
       money1: "",
@@ -100,22 +117,22 @@ export default {
       seeOut: false,
       tableData: [{}],
       collectObs: [],
-      petsData: [{}],
+      activityData: [{}],
     };
   },
   created() {
-    this.getDogList();
+    this.getActivityList();
   },
   methods: {
     makeQuery() {
       let query = {
         page_no: this.page_no,
-        page_size: this.page_size
+        page_size: this.page_size,
       };
       if (this.seeOut) {
-        query.index = "status ='saled' and type='dog'";
+        query.index = "status = 'saled'";
       } else {
-        query.index = "status ='saling' and type='dog'";
+        query.index = "status ='saling'";
       }
       if (this.money1 != "" && this.money2 == "") {
         query.small = this.money1;
@@ -138,10 +155,10 @@ export default {
       this.axios
         .get("/api/pet/get", {
           params: {
-            ...query
-          }
+            ...query,
+          },
         })
-        .then(res => {
+        .then((res) => {
           if (res.data.success) {
             var results = res.data;
             this.tableData = results.message;
@@ -156,17 +173,17 @@ export default {
             }
             return this.axios.get("/api/collect/get", {
               params: {
-                username: this.$store.state.username
-              }
+                username: this.$store.state.username,
+              },
             });
           }
         })
-        .then(res => {
+        .then((res) => {
           if (res.data.success) {
             var results = res.data.message;
             this.collectObs = results
-              .filter(item => item.status == "saling")
-              .map(item => {
+              .filter((item) => item.status == "saling")
+              .map((item) => {
                 return item.petid;
               });
             this.tableData.filter((item, index) => {
@@ -182,9 +199,9 @@ export default {
       this.axios
         .post("/api/collect/add", {
           username: this.$store.state.username,
-          petid: row.petid
+          petid: row.petid,
         })
-        .then(res => {
+        .then((res) => {
           if (res.data.success) {
             row.collect = true;
             this.$message.success("加入收藏!");
@@ -196,10 +213,10 @@ export default {
         .delete("/api/collect/delete", {
           data: {
             username: this.$store.state.username,
-            petid: row.petid
-          }
+            petid: row.petid,
+          },
         })
-        .then(res => {
+        .then((res) => {
           if (res.data.success) {
             row.collect = false;
             this.$message.success("取消收藏!");
@@ -227,15 +244,15 @@ export default {
     goAddShop(row) {
       this.$confirm("确定加入购物车?", "提示", {
         confirmButtonText: "确定",
-        cancelButtonText: "取消"
+        cancelButtonText: "取消",
       })
         .then(() => {
           this.axios
             .post("/api/shopcar/add", {
               petid: row.petid,
-              username: this.$store.state.username
+              username: this.$store.state.username,
             })
-            .then(res => {
+            .then((res) => {
               if (res.data.success) {
                 if (res.data.message == "宠物已达上限") {
                   this.$message.warning("购物车中数量已达最大库存！");
@@ -248,11 +265,10 @@ export default {
         .catch(() => {});
     },
     goDetail(row) {
-      this.Dialog.title("宠物详情")
+      this.Dialog.title("活动详情")
         .width("500px")
         .currentView(detail, { row })
-        .then(data => {
-          this.goQuery();
+        .then((data) => {
         })
         .show();
     },
@@ -265,15 +281,18 @@ export default {
       this.goQuery();
     },
 
-    getDogList() {
-      this.axios.get("http://127.0.0.1:5000/pets/get_list").then((res) => {
+    getActivityList() {
+      this.axios.get("http://127.0.0.1:5000/activity/").then((res) => {
         if (res.data.flag) {
-          let pets = res.data.data.rows;
-          this.petsData = pets.filter(item => item.pet_type == 'dog')
+          this.activityData = res.data.data.rows;
+          this.activityData.map((item) => {
+            item.activity_date = this.moment(item.activity_date).format("YYYY-MM-DD")
+          })
+          console.log(this.activityData)
         }
       });
     },
-  }
+  },
 };
 </script>
 
@@ -283,15 +302,19 @@ export default {
   line-height: 32px;
   width: 70px;
 }
-.dog-shopcar {
+.pet-shopcar {
   cursor: pointer;
   position: absolute;
   display: none;
 }
-.dog-list-box:hover .dog-shopcar {
+.pet-collect {
+  float: right;
+  padding: 2px 5px;
+}
+.pet-list-box:hover .pet-shopcar {
   display: block;
 }
-.dog-picture {
+.pet-picture {
   width: 100px;
   height: 100px;
   display: block;
@@ -301,10 +324,10 @@ export default {
   margin-top: 5px;
   transition: all 0.6s;
 }
-.dog-list-box .dog-picture:hover {
+.pet-list-box .pet-picture:hover {
   transform: scale(1.4);
 }
-.dog-title {
+.pet-title {
   font-size: 30px;
   font-family: "jelly";
   color: #67b4fc;
@@ -314,18 +337,21 @@ export default {
   margin-right: auto;
   margin-top: 10px;
 }
-.dog-info {
+.pet-info {
   color: #6e6b6b;
   font-family: "jelly";
   font-size: 20px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
-.dog-info-box {
+.pet-info-box {
   display: flex;
   line-height: 25px;
   justify-content: space-between;
   padding-right: 10px;
 }
-.dog-list-box {
+.pet-list-box {
   cursor: pointer;
   width: 200px;
   height: 220px;
@@ -337,16 +363,12 @@ export default {
   padding-top: 5px;
   margin-top: 30px;
 }
-.dog-collect {
-  float: right;
-  padding: 2px 5px;
-}
-.dog-button-box {
+.pet-button-box {
   display: flex;
   justify-content: space-between;
   margin-right: 20px;
 }
-.dog-card-box {
+.pet-card-box {
   width: 300px;
   text-align: center;
   margin: 50px auto;

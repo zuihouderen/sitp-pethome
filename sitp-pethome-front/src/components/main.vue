@@ -97,10 +97,10 @@
           <span class="title">宠物萌照</span>
         </div>
         <el-row :gutter="20" class="row">
-          <el-col :span="8" v-for="(item, index) in picturelist" :key="index">
+          <el-col :span="8" v-for="(item, index) in petsData" :key="index">
             <el-image
               class="picture"
-              :src="item"
+              :src="picturelist[0]"
               @click="goPetDetail(item)"
             ></el-image>
           </el-col>
@@ -329,6 +329,7 @@ export default {
     this.getNums();
     this.getWeather();
     this.getSchedule();
+    this.getPetList();
   },
   methods: {
     //获取日历活动安排
@@ -368,34 +369,34 @@ export default {
     },
 
     getPetList() {
-      this.axios("/api/pets/list").then((res) => {
+      this.axios.get("http://127.0.0.1:5000/pets/get_list").then((res) => {
         if (res.data.flag) {
-            this.petsData = res.data.rows
+          this.petsData = res.data.data.rows;
         }
       });
     },
 
     getPet(id) {
-      this.axios("/api/pets/", {
-        params: {
+      this.axios
+        .post("http://127.0.0.1:5000/pets/get_petinfo", {
           id: id,
-        },
-      }).then((res) => {
-        if (res.data.flag) {
-        }
-      });
+        })
+        .then((res) => {
+          console.log(res);
+          if (res.data.flag) {
+          }
+        });
     },
 
     goPetDetail(row) {
+      this.getPet(1);
       this.Dialog.title("宠物详情")
         .width("500px")
         .currentView(detail, { row })
-        .then((data) => {
-
-        })
+        .then((data) => {})
         .show();
     },
-    
+
     dealMyDate(v) {
       let len = this.calendarDate.length;
       let res = "";

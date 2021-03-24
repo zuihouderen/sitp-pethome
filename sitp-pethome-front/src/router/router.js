@@ -249,7 +249,11 @@ const router = new Router({
                     name: 'user',
                     component: resolve => require(['../components/user/index.vue'], resolve)
                 },
-
+                {
+                    path: '/activity/index',
+                    name: 'activity',
+                    component: resolve => require(['../components/activity/index.vue'], resolve)
+                }
             ]
         }
     ],

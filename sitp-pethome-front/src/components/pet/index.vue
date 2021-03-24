@@ -36,11 +36,11 @@
         >
       </div>
     </div>
-    <div v-if="tableData.length != 0">
+    <div v-if="petsData.length != 0">
       <div
         class="pet-list-box"
         @click="goDetail(item)"
-        v-for="(item, index) in tableData"
+        v-for="(item, index) in petsData"
         :key="index"
       >
         <div v-if="!seeOut">
@@ -65,16 +65,16 @@
             @click.stop="goCollect(item)"
           ></el-button>
         </div>
-        <el-image class="pet-picture" :src="item.picture" fit="fill"></el-image>
-        <span class="pet-title">{{ item.name }}</span>
+        <el-image class="pet-picture" :src="item.pet_img" fit="fill"></el-image>
+        <span class="pet-title">{{ item.pet_name }}</span>
         <div class="pet-info-box">
-          <span class="pet-info">{{ item.variety }}</span>
-          <span class="pet-info">{{ item.age }}</span>
+          <span class="pet-info">{{ item.pet_variety }}</span>
+          <span class="pet-info">{{ item.pet_age }}</span>
         </div>
         <div class="pet-info-box">
-          <span class="pet-info" v-if="item.status == 'saled'">售出</span>
+          <span class="pet-info" v-if="item.pet_status == 'saled'">售出</span>
           <span class="pet-info" v-else>在售</span>
-          <span class="pet-info">{{ item.price }}</span>
+          <span class="pet-info">{{ item.pet_price }}</span>
         </div>
       </div>
     </div>
@@ -117,10 +117,12 @@ export default {
       seeOut: false,
       tableData: [{}],
       collectObs: [],
+      petsData: [{}],
     };
   },
   created() {
-    this.goQuery();
+    // this.goQuery();
+    this.getPetList();
   },
   methods: {
     makeQuery() {
@@ -279,6 +281,14 @@ export default {
     currentChangeHandle(val) {
       this.page_no = val;
       this.goQuery();
+    },
+
+    getPetList() {
+      this.axios.get("http://127.0.0.1:5000/pets/get_list").then((res) => {
+        if (res.data.flag) {
+          this.petsData = res.data.data.rows;
+        }
+      });
     },
   },
 };
