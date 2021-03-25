@@ -73,52 +73,49 @@ const navlist = [{
     }, {
         adminMenu: {
             id: 2,
-            menuName: "用户管理",
+            menuName: "问答区",
             menuType: "list",
             pid: "0",
-            url: "#",
+            url: "/QA",
             sort: 1,
             deep: 1,
-            code: "2",
-            permissions: "admin"
+            code: "2"
         },
-        children: [{
-                adminMenu: {
-                    id: 21,
-                    menuName: "全部账户",
-                    menuType: "page",
-                    pid: "2",
-                    url: "/customer/index",
-                    sort: 1,
-                    deep: 2,
-                    code: "21",
-                    permissions: "admin"
-                }
-            },
+        children: [
             {
                 adminMenu: {
-                    id: 22,
-                    menuName: "vip客户",
+                    id: 21,
+                    menuName: "查看问题",
                     menuType: "page",
                     pid: "2",
-                    url: "/customer/vip",
+                    url: "/QA",
+                    sort: 1,
+                    deep: 2,
+                    code: "21"
+                }
+            },{
+                adminMenu: {
+                    id: 22,
+                    menuName: "发布问题",
+                    menuType: "page",
+                    pid: "2",
+                    url: "/createQuestion",
                     sort: 2,
                     deep: 2,
-                    code: "22",
-                    permissions: "admin"
+                    code: "21"
                 }
             },
             {
                 adminMenu: {
                     id: 23,
-                    menuName: "管理员",
+                    menuName: "我的问题",
                     menuType: "page",
                     pid: "2",
-                    url: "/customer/admin",
+                    url: "/customer/vip",
                     sort: 3,
                     deep: 2,
-                    code: "23",
-                    permissions: "admin"
+                    code: "22",
+                    permissions:"admin"
                 }
             }
         ]
@@ -181,7 +178,9 @@ const navlist = [{
             deep: 1,
             code: "4"
         },
-        children: [{
+        children: [
+            
+            {
                 adminMenu: {
                     id: 41,
                     menuName: "留言板",
@@ -219,6 +218,56 @@ const navlist = [{
             }
         ]
     }, {
+        adminMenu: {
+            id: 2,
+            menuName: "宠物知识",
+            menuType: "list",
+            pid: "0",
+            url: "/knowledge",
+            sort: 1,
+            deep: 1,
+            code: "4.5"
+        },
+        children: [
+            {
+                adminMenu: {
+                    id: 21,
+                    menuName: "查看知识",
+                    menuType: "page",
+                    pid: "2",
+                    url: "/knowledge",
+                    sort: 1,
+                    deep: 2,
+                    code: "21"
+                }
+            },{
+                adminMenu: {
+                    id: 22,
+                    menuName: "发布知识",
+                    menuType: "page",
+                    pid: "2",
+                    url: "/createKnowledge",
+                    sort: 2,
+                    deep: 2,
+                    code: "21"
+                }
+            },
+            {
+                adminMenu: {
+                    id: 23,
+                    menuName: "我的知识",
+                    menuType: "page",
+                    pid: "2",
+                    url: "/customer/vip",
+                    sort: 3,
+                    deep: 2,
+                    code: "22",
+                    permissions:"admin"
+                }
+            }
+        ]
+    },
+    {
         adminMenu: {
             id: 5,
             menuName: "宝贝照顾手册",
@@ -424,6 +473,32 @@ const navlist = [{
                     code: "82"
                 }
             }
+        ]
+    },
+    //添加个人主页
+    {
+        adminMenu: {
+            id: 9,
+            menuName: "个人中心",
+            menuType: "list",
+            pid: "0",
+            url: "#",
+            sort: 9,
+            deep: 1,
+            code: "9"
+        },
+        children: [{
+            adminMenu: {
+                id: 91,
+                menuName: "我的主页",
+                menuType: "page",
+                pid: "9",
+                url: "/user/index",
+                sort: 1,
+                deep: 2,
+                code: "91"
+            }
+        }
         ]
     }
 ]
