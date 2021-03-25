@@ -209,6 +209,41 @@ const router = new Router({
                     component: resolve => require(['../components/shpping/changepic.vue'], resolve)
                 },
                 {
+                    path: '/QA',
+                    name: 'QA',
+                    component: resolve => require(['../components/QA/index.vue'], resolve)
+                },
+                {
+                    path: '/QA/:id',
+                    name: 'QAView',
+                    component: resolve => require(['../components/QA/view.vue'], resolve)
+                },
+                {
+                    path: '/createQuestion',
+                    name: 'QACreate',
+                    component: resolve => require(['../components/QA/createQuestion.vue'], resolve)
+                },
+                {
+                    path: '/updateQuestion/:id',
+                    name: 'QAUpdate',
+                    component: resolve => require(['../components/QA/updateQuestion.vue'], resolve)
+                },
+                {
+                    path: '/knowledge',
+                    name: 'Knowledge',
+                    component: resolve => require(['../components/knowledge/index.vue'], resolve)
+                },
+                {
+                    path: '/createKnowledge',
+                    name: 'knowledgeCreate',
+                    component: resolve => require(['../components/knowledge/createKnowledge.vue'], resolve)
+                },
+                {
+                    path: '/updateKnowledge/:id',
+                    name: 'knowledgeUpdate',
+                    component: resolve => require(['../components/knowledge/updateKnowledge.vue'], resolve)
+                },
+                {
                     path: '/video/index',
                     name: 'showIndex',
                     component: resolve => require(['../components/video/index.vue'], resolve)
@@ -232,23 +267,40 @@ const router = new Router({
                     path: '/chat/index',
                     name: 'chat',
                     component: resolve => require(['../components/chat/index.vue'], resolve)
-                }
+                },
+                //将个人中心注册到路由上
+                {
+                    path: '/user/index',
+                    name: 'user',
+                    component: resolve => require(['../components/user/index.vue'], resolve)
+                },
+                {
+                    path: '/user/changepic',
+                    name: 'changepic',
+                    component: resolve => require(['../components/user/changepic.vue'], resolve)
+                },
+                {
+                    path: '/user/pet/:id',
+                    name: 'petdetail',
+                    component: resolve => require(['../components/user/petdetail.vue'], resolve)
+                },
+
             ]
         }
     ],
 })
 
-// router.beforeEach((to, from, next) => {
-//     if (to.path === '/login' || to.path === '/forgetpsd' || to.path === '/register') {
-//         next();
-//     } else {
-//         let token = localStorage.getItem('token');
-//         if (token === null || token === '') {
-//             next('/login');
-//         } else {
-//             next();
-//         }
-//     }
-// });
+router.beforeEach((to, from, next) => {
+    if (to.path === '/login' || to.path === '/forgetpsd' || to.path === '/register') {
+        next();
+    } else {
+        let token = localStorage.getItem('token');
+        if (token === null || token === '') {
+            next('/login');
+        } else {
+            next();
+        }
+    }
+});
 
 export default router
