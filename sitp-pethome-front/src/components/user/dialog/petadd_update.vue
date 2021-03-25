@@ -14,7 +14,7 @@
         <el-input type="text" size="small" class="formlist" v-model="form.name"></el-input>
       </el-form-item>
       <el-form-item label="年龄：" label-width="100px" prop="age">
-        <el-input v-model="form.age" type="text" class="formlist" size="small"></el-input>
+        <el-input v-model="form.age" type="number" class="formlist" size="small"></el-input>
       </el-form-item>
       <el-form-item label="主人：" label-width="100px" prop="host" hidden>
         <el-input
@@ -101,6 +101,7 @@ export default {
                 if (res.data.flag) {
                   this.$message.success("添加成功！");
                   this.closeDialog();
+                  this.goClose();
                   this.close();
                 }
               });

@@ -275,11 +275,15 @@
                 this.$confirm("确认删除的宠物吗？", "提示", {
                     confirmButtonText: "确定",
                     cancelButtonText: "取消"
-                }).then(() => {
-                    setTimeout(()=>{
-
-                    },2000)
-                });
+                }).then(()=>{
+                  this.axios.post("http://127.0.0.1:5000/pets/delete_pet",
+                      {id:this.form.id})
+                  .then(res=>{
+                    if(res.data.flag){
+                      this.$router.push("../index")
+                    }
+                  })
+                })
             },
             getSrc(src) {
                 this.form.img = src;

@@ -72,6 +72,7 @@
                                                     size="small"
                                                     class="formlist"
                                                     :value="item.activity_title"
+                                                    disabled
                                             ></el-input>
                                         </el-form-item>
                                         <el-form-item label="创建时间：" label-width="100px" prop="date" >
@@ -80,12 +81,14 @@
                                                     size="small"
                                                     class="formlist"
                                                     :value="item.activity_date"
+                                                    disabled
                                             ></el-input>
                                         </el-form-item>
 
                                         <el-form-item label="活动地址：" label-width="100px" prop="address">
                                             <el-input type="text"  class="formlist"
                                                       :value="item.activity_address"
+                                                      disabled
                                             ></el-input>
                                         </el-form-item>
                                         <el-form-item label="活动主持：" label-width="100px" prop="host" >
@@ -93,12 +96,17 @@
                                         </el-form-item>
                                         <el-form-item label="活动内容：" label-width="100px" prop="content">
                                             <el-input type="textarea" :rows="2" class="formlist"
-                                            :value="item.activity_content"></el-input>
+                                                      disabled
+                                                    :value="item.activity_content">
+                                            </el-input>
                                         </el-form-item>
                                     </el-form>
                                     <div class="center" v-if="item.activity_host==form.user_name">
-                                        <el-button type="primary" size="small" @click="">修改</el-button>
-                                        <el-button size="small" type="danger" @click="">删除</el-button>
+<!--                                        <el-button type="primary" size="small" @click="">修改</el-button>-->
+                                        <el-button size="small" type="danger" @click="goDelAct(item.activity_id)">删除</el-button>
+                                    </div>
+                                    <div class="center" v-else>
+                                      <el-button size="small" type="primary" @click="goAddFollow(item.activity_host)">关注</el-button>
                                     </div>
                                 </el-col>
                             </el-row>
@@ -208,14 +216,7 @@
                     followed_name: "hh",
                     follower_id: 4,
                 }],
-                activities:[{
-                    activity_address: "上海",
-                    activity_content: "而我却",
-                    activity_date: "2021-03-24 23:03:58",
-                    activity_host: "haijun",
-                    activity_id: 3,
-                    activity_title: "活动以",
-                }],
+                activities:[],
                 actform:{
                     data:'',
                     host:'haijun',
@@ -414,7 +415,43 @@
                             this.follows=res.data.data.rows;
                         }
                     });
+            },
+            goDelAct(id){
+              this.$confirm("确认取消活动吗？", "提示", {
+                confirmButtonText: "确定",
+                cancelButtonText: "取消"
+              }).then(()=>{
+                this.axios.post("http://127.0.0.1:5000/activity/delete_activity",
+                    {id:id})
+                    .then(res=>{
+                      this.getActivities();
+                      if(res.data.flag){
+                        this.$message.success("删除活动成功！");
+                      }else {
+                        this.$message.error("删除活动失败！");
+                      }
+                    })
+              })
+            },
+            goAddFollow(followed_name){
+              console.log(followed_name)
+              this.$confirm("确认关注用户吗？", "提示", {
+                confirmButtonText: "确定",
+                cancelButtonText: "取消"
+              }).then(()=>{
+                this.axios.post("http://127.0.0.1:5000/user/add_follow",
+                    {followed_name:followed_name})
+                    .then(res=>{
+                      this.getActivities();
+                      if(res.data.flag){
+                        this.$message.success("关注用户成功成功！");
+                      }else {
+                        this.$message.error("关注用户失败！");
+                      }
+                    })
+              })
             }
+
         }
     };
 </script>
