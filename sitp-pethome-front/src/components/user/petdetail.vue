@@ -57,34 +57,33 @@
     <div  class="body-right">
         <el-button type="primary" size="middle" style="margin-left: 120px;margin-bottom: 10px" @click="goAdd(form.name)">添加宠物日志</el-button>
         <el-timeline  >
-            <el-timeline-item :timestamp="blogform.date" placement="top" v-for="item in 5" s>
+            <el-timeline-item :timestamp="item.date" placement="top" v-for="item in blogs" s>
                 <el-card shadow="hover" style="background-color: rgba(137,209,238,0.07);">
                               <el-form
                                       label-position="right"
-                                      :model="blogform"
+                                      :model="item"
                                       :rules="rules1"
                                       style="margin-left: 200px"
-                                      ref="blogform"
+                                      ref="item"
                               >
                                   <el-form-item label="" label-width="100px">
-                                      <UploadImage @src="getSrc1" :imageUrl="blogform.img"></UploadImage>
+                                      <UploadImage @src="getSrc1" :imageUrl="item.img"></UploadImage>
                                   </el-form-item>
                                   <el-form-item label="日志名称：" label-width="100px" prop="title">
                                       <el-input
                                               type="text"
                                               size="small"
                                               class="formlist"
-                                              v-model="blogform.title"
+                                              v-model="item.title"
                                       ></el-input>
                                   </el-form-item>
                                   <el-form-item label="日志描述：" label-width="100px" prop="description">
-                                      <el-input type="textarea" :rows="3" class="formlist" v-model="blogform.description"></el-input>
+                                      <el-input type="textarea" :rows="3" class="formlist" v-model="item.description"></el-input>
                                   </el-form-item>
                               </el-form>
                     <div class="center" style="margin-bottom: 5px;margin-top: -5px">
-                        <el-button type="primary" size="small" @click="">保存</el-button>
-                        <el-button size="small" @click="">取消</el-button>
-                        <el-button size="small" type="danger" @click="">删除</el-button>
+                        <el-button type="primary" size="small" @click="goEditBlog(item)">保存</el-button>
+                        <el-button size="small" type="danger" @click="goDelBlog(item.id)">删除</el-button>
                     </div>
 
                 </el-card>
@@ -120,14 +119,15 @@
             };
             return{
                 blogform:{
-                    id:'',
-                    img:'',
-                    title: "",
-                    description: "",
-                    shared:'0',
-                    owner:'',
-                    date:'',
+                  id:'',
+                  img:'',
+                  title: "",
+                  description: "",
+                  shared:'0',
+                  owner:'',
+                  date:'',
                 },
+                blogs:[],
                 form: {
                     id:"",
                     img: "",
@@ -189,6 +189,37 @@
             }
         },
         methods:{
+            getBlogs(){
+              this.axios.post("http://127.0.0.1:5000/blog/getblogs",{
+                owner:this.form.name
+              }).then(res=>{
+                console.log(res.data.data.rows);
+                if(res.data.flag){
+                    this.blogs=[];
+                    let list=res.data.data.rows;
+                    for (let item of list){
+                      let blogform={
+                        id:'',
+                        img:'',
+                        title: "",
+                        description: "",
+                        shared:'0',
+                        owner:'',
+                        date:'',
+                      };
+                      blogform.date=item.blog_date;
+                      blogform.description=item.blog_description;
+                      blogform.id=item.blog_id;
+                      blogform.img=item.blog_img;
+                      blogform.owner=item.blog_owner;
+                      blogform.title=item.blog_title;
+                      blogform.shared=item.shared;
+                      this.blogs.push(blogform);
+                    }
+                    console.log(this.blogs)
+                }
+              })
+            },
             getPet(id){
                 this.axios.post("http://127.0.0.1:5000/pets/get_petinfo",{
                     id:id
@@ -207,6 +238,7 @@
                         this.form.type=result.pet_type;
                         this.form.gender=result.pet_gender+"";
                         this.form.id=result.pet_id;
+                        this.getBlogs();
                     }
                 })
             },
@@ -259,9 +291,45 @@
                 this.Dialog.title("添加宠物日志")
                     .width("600px")
                     .currentView(blogadd, {owner})
-                    .then()
+                    .then(()=>{
+                      this.getBlogs()
+                    })
                     .show();
-            }
+            },
+          goEditBlog(item) {
+            this.blogform=item;
+            console.log("修改宠物日志");
+              if (true) {
+                if (this.blogform.img == "") {
+                  this.$message.warning("请选择图片！");
+                }else {
+                  this.axios.post("http://127.0.0.1:5000/blog/modify_blog", this.blogform).then(res => {
+                    console.log(res.data)
+                    if (res.data.flag) {
+                      this.$message.success("修改宠物日志成功！");
+                    }
+                  });
+                }
+              }
+          },
+          goDelBlog(item){
+            this.$confirm("确认删除这条日志吗？", "提示", {
+              confirmButtonText: "确定",
+              cancelButtonText: "取消"
+            }).then(()=>{
+              this.axios.post("http://127.0.0.1:5000/blog/delete_blog",
+                  {id:item})
+                  .then(res=>{
+                    this.getBlogs();
+                    if(res.data.flag){
+                      this.$message.success("删除宠物日志成功！");
+                    }else {
+                      this.$message.error("删除宠物日志失败！");
+                    }
+                  })
+            })
+
+          }
 
         },
 
