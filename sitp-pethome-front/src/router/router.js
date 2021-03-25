@@ -209,6 +209,41 @@ const router = new Router({
                     component: resolve => require(['../components/shpping/changepic.vue'], resolve)
                 },
                 {
+                    path: '/QA',
+                    name: 'QA',
+                    component: resolve => require(['../components/QA/index.vue'], resolve)
+                },
+                {
+                    path: '/QA/:id',
+                    name: 'QAView',
+                    component: resolve => require(['../components/QA/view.vue'], resolve)
+                },
+                {
+                    path: '/createQuestion',
+                    name: 'QACreate',
+                    component: resolve => require(['../components/QA/createQuestion.vue'], resolve)
+                },
+                {
+                    path: '/updateQuestion/:id',
+                    name: 'QAUpdate',
+                    component: resolve => require(['../components/QA/updateQuestion.vue'], resolve)
+                },
+                {
+                    path: '/knowledge',
+                    name: 'Knowledge',
+                    component: resolve => require(['../components/knowledge/index.vue'], resolve)
+                },
+                {
+                    path: '/createKnowledge',
+                    name: 'knowledgeCreate',
+                    component: resolve => require(['../components/knowledge/createKnowledge.vue'], resolve)
+                },
+                {
+                    path: '/updateKnowledge/:id',
+                    name: 'knowledgeUpdate',
+                    component: resolve => require(['../components/knowledge/updateKnowledge.vue'], resolve)
+                },
+                {
                     path: '/video/index',
                     name: 'showIndex',
                     component: resolve => require(['../components/video/index.vue'], resolve)
