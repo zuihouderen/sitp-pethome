@@ -280,7 +280,7 @@
                       {id:this.form.id})
                   .then(res=>{
                     if(res.data.flag){
-                      this.$router.push("../index")
+                      this.$router.replace("/user/index")
                     }
                   })
                 })

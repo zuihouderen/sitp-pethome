@@ -208,14 +208,7 @@
             };
             return {
                 petList:[],
-                follows:[{
-                    followed_age: 23,
-                    followed_gender: 1,
-                    followed_id: 1,
-                    followed_img: "http://sitp.oss-cn-shanghai.aliyuncs.com/sitp1616601225037",
-                    followed_name: "hh",
-                    follower_id: 4,
-                }],
+                follows:[],
                 activities:[],
                 actform:{
                     data:'',
@@ -410,6 +403,7 @@
                     .get("http://127.0.0.1:5000/user/get_myfollow")
                     .then(res => {
                         console.log(res.data);
+                        this.follows=[];
                         if (res.data.flag) {
                             console.log(res.data.data.rows);
                             this.follows=res.data.data.rows;
@@ -444,6 +438,7 @@
                     .then(res=>{
                       this.getActivities();
                       if(res.data.flag){
+                        this.getFollows();
                         this.$message.success("关注用户成功成功！");
                       }else {
                         this.$message.error("关注用户失败！");
